@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment;
 import com.example.recycleviewlist.fragment.WorkListFragment;
 
 public class WorkListActivity extends SingleFragment {
-    public static final String ARG_CRIME_ID = "com.example.recycleviewlist.fragmentARG_CRIME_ID";
     public final static String nameKey = "com.example.recycleviewlist.fragment.nameKey";
     public final static String numberKey = "com.example.recycleviewlist.fragment.numberKey";
 
