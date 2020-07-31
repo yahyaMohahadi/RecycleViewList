@@ -1,8 +1,8 @@
 package com.example.recycleviewlist.fragment;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.WorkListActivity;
 
+import java.util.Random;
+
 
 public class WorkListFragment extends Fragment {
 
@@ -24,6 +26,7 @@ public class WorkListFragment extends Fragment {
     private int mIntNumber;
     private String mStringName;
     private RecyclerView mRecyclerView;
+    private Random mRandom = new Random();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,29 +49,45 @@ public class WorkListFragment extends Fragment {
     private class AdapterTask extends RecyclerView.Adapter {
 
         private class HolderTask extends RecyclerView.ViewHolder {
-            TextView mTextViewNumbre;
+            TextView mTextViewState;
             TextView mTextViewName;
             LinearLayout mLinearLayoutList;
 
             @SuppressLint("ResourceAsColor")
             public HolderTask(@NonNull View itemView) {
                 super(itemView);
-                mTextViewNumbre = itemView.findViewById(R.id.textView_state);
+                mTextViewState = itemView.findViewById(R.id.textView_state);
                 mTextViewName = itemView.findViewById(R.id.textView_name);
                 mLinearLayoutList = itemView.findViewById(R.id.linear_list);
 
             }
 
-            @SuppressLint("ResourceAsColor")
             public void bind() {
-                mTextViewName.setText(mStringName);
-                mTextViewNumbre.setText(1 + getAdapterPosition() + "");
-                Log.d("salam", getAdapterPosition() + "");
+                setRandomState();
+
                 if ((getAdapterPosition() % 2) == 0) {
-                    itemView.setBackgroundColor(R.color.color_bachground1t);
+                    itemView.setBackgroundResource(R.color.color_bachground1);
                 } else {
-                    itemView.setBackgroundColor(R.color.color_bachground2t);
+                    itemView.setBackgroundResource(R.color.color_bachground2);
                 }
+            }
+
+            private void setRandomState() {
+                mTextViewName.setText(mStringName);
+                String state = "";
+                switch (mRandom.nextInt(3)) {
+                    case 0:
+                        state = String.valueOf(State.DOING);
+
+                        break;
+                    case 1:
+                        state = String.valueOf(State.DONE);
+                        break;
+                    case 2:
+                        state = String.valueOf(State.TODO);
+                        break;
+                }
+                mTextViewState.setText(state);
             }
         }
 

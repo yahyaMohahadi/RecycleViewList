@@ -5,6 +5,6 @@
     <color name="colorAccent">#03DAC5</color>
 
 
-    <color name="color_bachground1t">#D3E6EF</color>
-    <color name="color_bachground2t">#E3AEA9</color>
+    <color name="color_bachground1">#D3E6EF</color>
+    <color name="color_bachground2">#E3AEA9</color>
 </resources>

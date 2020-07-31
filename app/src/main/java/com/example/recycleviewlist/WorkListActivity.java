@@ -17,6 +17,7 @@ public class WorkListActivity extends SingleFragment {
         Bundle bundle = new Bundle();
         instance.putExtra(nameKey, name);
         instance.putExtra(numberKey, number);
+
         return instance;
 
     }
