@@ -34,7 +34,7 @@ public class StartFragment extends Fragment {
             public void onClick(View view) {
                 String name = mEditTextName.getText().toString();
                 int number = Integer.parseInt(mEditTextNumber.getText().toString());
-                startActivity(WorkListActivity.newIntent(getActivity(),number,name));
+                //startActivity(WorkListActivity.newIntent(getActivity(),number,name));
             }
         });
     }

@@ -1,7 +1,6 @@
 package com.example.recycleviewlist.fragment;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +26,7 @@ public class WorkListFragment extends Fragment {
     private String mStringName;
     private RecyclerView mRecyclerView;
     private Random mRandom = new Random();
+    private State mState ;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,6 +39,7 @@ public class WorkListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_work_list, container, false);
         mStringName = (String) getArguments().getString(WorkListActivity.nameKey);
         mIntNumber = (int) getArguments().getInt(WorkListActivity.numberKey);
+        mState = (State) getArguments().getSerializable(WorkListActivity.stateKey);
         mRecyclerView = view.findViewById(R.id.recucleView_work);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(new AdapterTask());
@@ -63,17 +64,18 @@ public class WorkListFragment extends Fragment {
             }
 
             public void bind() {
-                setRandomState();
-
-                if ((getAdapterPosition() % 2) == 0) {
+                mTextViewName.setText(mStringName);
+                mTextViewState.setText(String.valueOf(mState));
+                //color
+          /*      if ((getAdapterPosition() % 2) == 0) {
                     itemView.setBackgroundResource(R.color.color_bachground1);
                 } else {
                     itemView.setBackgroundResource(R.color.color_bachground2);
-                }
+                }*/
             }
 
-            private void setRandomState() {
-                mTextViewName.setText(mStringName);
+          /*  private void setRandomState() {
+
                 String state = "";
                 switch (mRandom.nextInt(3)) {
                     case 0:
@@ -88,7 +90,7 @@ public class WorkListFragment extends Fragment {
                         break;
                 }
                 mTextViewState.setText(state);
-            }
+            }*/
         }
 
         @NonNull

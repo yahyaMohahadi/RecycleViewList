@@ -1,5 +1,7 @@
 package com.example.recycleviewlist.fragment;
 
-public  enum  State {
+import java.io.Serializable;
+
+public  enum  State implements Serializable {
     TODO , DONE , DOING
 }
