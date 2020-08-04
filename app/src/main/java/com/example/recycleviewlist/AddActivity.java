@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.recycleviewlist.fragment.StartFragment;
+import com.example.recycleviewlist.fragment.AddFragment;
 
 public class AddActivity extends AppCompatActivity {
 
@@ -19,7 +19,7 @@ public class AddActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         FragmentManager manager = getSupportFragmentManager();
         if (savedInstanceState == null) {
-            manager.beginTransaction().add(R.id.fragment_container, new StartFragment()).commit();
+            manager.beginTransaction().add(R.id.fragment_container, new AddFragment()).commit();
         }
     }
 
@@ -30,7 +30,7 @@ public class AddActivity extends AppCompatActivity {
 
     public static Fragment newInstance(Intent intent) {
         Bundle args = new Bundle();
-        StartFragment fragment = new StartFragment();
+        AddFragment fragment = new AddFragment();
         fragment.setArguments(args);
         return fragment;
     }

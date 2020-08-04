@@ -1,5 +1,7 @@
 package com.example.recycleviewlist.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +13,18 @@ import android.widget.RadioGroup;
 import androidx.fragment.app.Fragment;
 
 import com.example.recycleviewlist.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.recycleviewlist.model.State;
 
-public class StartFragment extends Fragment {
+public class AddFragment extends Fragment {
     private EditText mEditTextNumber;
     private EditText mEditTextName;
     private Button mButtonStart;
-    private  RadioGroup mRadioGroupState;
+    private RadioGroup mRadioGroupState;
     private State mState = State.DONE;
 
+    public static final String KEY_NAME = "com.example.recycleviewlist.fragmentresultName";
+    public static final String KEY_NUMBER = "com.example.recycleviewlist.fragmentresultNumber";
+    public static final String KEY_STATE = "com.example.recycleviewlist.fragmentresultState";
 
 
     @Override
@@ -38,10 +43,15 @@ public class StartFragment extends Fragment {
                 String name = mEditTextName.getText().toString();
                 int number = Integer.parseInt(mEditTextNumber.getText().toString());
                 //startActivity(WorkListActivity.newIntent(getActivity(),number,name));
+
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra(KEY_NAME, name);
+                returnIntent.putExtra(KEY_NUMBER, number);
+                returnIntent.putExtra(KEY_STATE, mState);
+                getActivity().setResult(Activity.RESULT_OK, returnIntent);
+                getActivity().finish();
             }
         });
-
-
 
         mRadioGroupState.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {

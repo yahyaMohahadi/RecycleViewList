@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recycleviewlist.R;
+import com.example.recycleviewlist.model.State;
 
 import java.util.Random;
 
@@ -90,31 +91,7 @@ public class WorkListFragment extends Fragment {
             public void bind() {
                 mTextViewName.setText(mStringName);
                 mTextViewState.setText(String.valueOf(mState));
-                //color
-          /*      if ((getAdapterPosition() % 2) == 0) {
-                    itemView.setBackgroundResource(R.color.color_bachground1);
-                } else {
-                    itemView.setBackgroundResource(R.color.color_bachground2);
-                }*/
             }
-
-          /*  private void setRandomState() {
-
-                String state = "";
-                switch (mRandom.nextInt(3)) {
-                    case 0:
-                        state = String.valueOf(State.DOING);
-
-                        break;
-                    case 1:
-                        state = String.valueOf(State.DONE);
-                        break;
-                    case 2:
-                        state = String.valueOf(State.TODO);
-                        break;
-                }
-                mTextViewState.setText(state);
-            }*/
         }
 
         @NonNull

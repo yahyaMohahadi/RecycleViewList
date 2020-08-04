@@ -1,4 +1,4 @@
-package com.example.recycleviewlist.fragment;
+package com.example.recycleviewlist.model;
 
 import java.io.Serializable;
 

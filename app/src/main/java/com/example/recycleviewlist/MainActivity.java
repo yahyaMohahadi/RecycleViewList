@@ -6,13 +6,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.recycleviewlist.fragment.State;
+import com.example.recycleviewlist.fragment.AddFragment;
+import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.fragment.WorkListFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -20,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class WorkListActivityNotFragment extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
 
     ViewPager2 mViewPagerTask;
@@ -43,6 +45,16 @@ public class WorkListActivityNotFragment extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0 && resultCode == RESULT_OK){
+            String name = data.getStringExtra(AddFragment.KEY_NAME);
+            int number = data.getIntExtra(AddFragment.KEY_NUMBER,0);
+            State state = (State) data.getSerializableExtra(AddFragment.KEY_STATE);
+        }
+    }
+
     private void setUI() {
         mViewPagerTask.setAdapter(new ViewPagerAdapter(this));
         setRegisterForViewPager();
@@ -52,7 +64,7 @@ public class WorkListActivityNotFragment extends AppCompatActivity {
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = AddActivity.getIntentAdd(WorkListActivityNotFragment.this);
+                Intent intent = AddActivity.getIntentAdd(MainActivity.this);
                 startActivityForResult(intent,0);
             }
         });
@@ -114,8 +126,8 @@ public class WorkListActivityNotFragment extends AppCompatActivity {
         public Fragment createFragment(int position) {
             return WorkListFragment.newInstance(
                     WorkListFragment.newIntent(
-                            WorkListActivityNotFragment.this,
-                            10,
+                            MainActivity.this,
+                            1,
                             "maktab",
                             mStates.get(position)
                     ));
