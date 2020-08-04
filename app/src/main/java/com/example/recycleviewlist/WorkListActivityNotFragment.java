@@ -1,11 +1,11 @@
 package com.example.recycleviewlist;
 
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -13,6 +13,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.recycleviewlist.fragment.State;
+import com.example.recycleviewlist.fragment.WorkListFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,9 +25,11 @@ public class WorkListActivityNotFragment extends AppCompatActivity {
 
     ViewPager2 mViewPagerTask;
     List<State> mStates = new ArrayList<>(Arrays.asList(State.DONE, State.DOING, State.TODO));
+
     TextView mTextViewDone;
     TextView mTextViewToDo;
     TextView mTextViewDoing;
+    private FloatingActionButton mActionButton;
 
 
     @Override
@@ -33,12 +37,28 @@ public class WorkListActivityNotFragment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_work_list_not_fragment);
 
-        mTextViewDoing = findViewById(R.id.textView_doing);
-        mTextViewDone = findViewById(R.id.textView_done);
-        mTextViewToDo = findViewById(R.id.textView_todo);
+        findView();
+        setOnClick();
+        setUI();
 
-        mViewPagerTask = findViewById(R.id.ViewPager_task);
+    }
+
+    private void setUI() {
         mViewPagerTask.setAdapter(new ViewPagerAdapter(this));
+        setRegisterForViewPager();
+    }
+
+    private void setOnClick() {
+        mActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = AddActivity.getIntentAdd(WorkListActivityNotFragment.this);
+                startActivityForResult(intent,0);
+            }
+        });
+    }
+
+    private void setRegisterForViewPager() {
         mViewPagerTask.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -55,7 +75,14 @@ public class WorkListActivityNotFragment extends AppCompatActivity {
                 super.onPageScrollStateChanged(state);
             }
         });
+    }
 
+    private void findView() {
+        mTextViewDoing = findViewById(R.id.textView_doing);
+        mTextViewDone = findViewById(R.id.textView_done);
+        mTextViewToDo = findViewById(R.id.textView_todo);
+        mViewPagerTask = findViewById(R.id.ViewPager_task);
+        mActionButton = findViewById(R.id.floatingActionButton_add);
     }
 
     private void SetTableColors(int position) {
@@ -85,8 +112,8 @@ public class WorkListActivityNotFragment extends AppCompatActivity {
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-            return WorkListActivity.newInstance(
-                    WorkListActivity.newIntent(
+            return WorkListFragment.newInstance(
+                    WorkListFragment.newIntent(
                             WorkListActivityNotFragment.this,
                             10,
                             "maktab",

@@ -12,7 +12,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:gravity="bottom|center"
-        android:text="start" />
+        android:text="add" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,5 +40,34 @@
             android:singleLine="true">
 
         </EditText>
+
+        <RadioGroup
+            android:id="@+id/RadioGroup_state"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:checkedButton="@id/radioButton_done"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radioButton_done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:text="done" />
+
+            <RadioButton
+                android:id="@+id/radioButton_doing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:text="doing" />
+
+            <RadioButton
+                android:id="@+id/radioButton_todo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="todo" />
+        </RadioGroup>
     </LinearLayout>
 </RelativeLayout>

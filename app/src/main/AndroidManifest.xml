@@ -16,10 +16,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WorkListActivity" />
-        <activity android:name=".StartActivity">
-
-        </activity>
+        <activity android:name=".AddActivity" />
     </application>
 
 </manifest>

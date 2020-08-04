@@ -1,6 +1,8 @@
 package com.example.recycleviewlist.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recycleviewlist.R;
-import com.example.recycleviewlist.WorkListActivity;
 
 import java.util.Random;
 
@@ -27,7 +28,30 @@ public class WorkListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private Random mRandom = new Random();
     private State mState ;
+    public final static String nameKey = "com.example.recycleviewlist.fragment.nameKey";
+    public final static String numberKey = "com.example.recycleviewlist.fragment.numberKey";
+    public final static String stateKey = "com.example.recycleviewlist.fragment.stateKey";
 
+
+    public static Intent newIntent(Context context, int number, String name , State state) {
+        Intent instance = new Intent(context, WorkListFragment.class);
+        instance.putExtra(nameKey, name);
+        instance.putExtra(numberKey, number);
+        instance.putExtra(stateKey, state);
+        return instance;
+
+    }
+
+
+    public static Fragment newInstance(Intent intent) {
+        Bundle args = new Bundle();
+        args.putString(nameKey, intent.getStringExtra(nameKey));
+        args.putInt(numberKey, intent.getIntExtra(numberKey, 0));
+        args.putSerializable(stateKey, intent.getSerializableExtra(stateKey));
+        WorkListFragment fragment = new WorkListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,9 +61,9 @@ public class WorkListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_work_list, container, false);
-        mStringName = (String) getArguments().getString(WorkListActivity.nameKey);
-        mIntNumber = (int) getArguments().getInt(WorkListActivity.numberKey);
-        mState = (State) getArguments().getSerializable(WorkListActivity.stateKey);
+        mStringName = (String) getArguments().getString(nameKey);
+        mIntNumber = (int) getArguments().getInt(numberKey);
+        mState = (State) getArguments().getSerializable(stateKey);
         mRecyclerView = view.findViewById(R.id.recucleView_work);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(new AdapterTask());
@@ -111,4 +135,5 @@ public class WorkListFragment extends Fragment {
             return mIntNumber;
         }
     }
+
 }
