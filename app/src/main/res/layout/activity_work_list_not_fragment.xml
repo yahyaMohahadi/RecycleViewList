@@ -7,9 +7,44 @@
     android:orientation="vertical"
     tools:context=".WorkListActivityNotFragment">
 
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/textView_done"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+            android:layout_weight="1"
+            android:text="done"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        <TextView
+            android:id="@+id/textView_doing"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="doing"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        />
+
+        <TextView
+            android:id="@+id/textView_todo"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="todo"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        />
+    </TableRow>
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/ViewPager_task"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="10" />
+        android:layout_weight="10" >
+
+    </androidx.viewpager2.widget.ViewPager2>
 </LinearLayout>

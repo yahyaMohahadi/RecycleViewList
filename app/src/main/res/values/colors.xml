@@ -7,4 +7,7 @@
 
     <color name="color_bachground1">#D3E6EF</color>
     <color name="color_bachground2">#E3AEA9</color>
+
+    <color name="color_bachground_table_on">#54D359</color>
+    <color name="color_bachground_table_of">#F8F4F4</color>
 </resources>
