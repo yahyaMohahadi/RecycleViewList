@@ -16,6 +16,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.recycleviewlist.fragment.AddFragment;
 import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.fragment.WorkListFragment;
+import com.example.recycleviewlist.model.Task;
 import com.example.recycleviewlist.model.TaskRepository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -28,18 +29,20 @@ public class MainActivity extends AppCompatActivity {
 
     ViewPager2 mViewPagerTask;
     List<State> mStates = new ArrayList<>(Arrays.asList(State.DONE, State.DOING, State.TODO));
-
     TextView mTextViewDone;
     TextView mTextViewToDo;
     TextView mTextViewDoing;
     private FloatingActionButton mActionButton;
+    private Fragment[] mFragments = new Fragment[3];
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_work_list_not_fragment);
-
+/*        TaskRepository.getInstance().addTask(new Task(State.DONE,"maktab"));
+        TaskRepository.getInstance().addTask(new Task(State.DOING,"maktab"));
+        TaskRepository.getInstance().addTask(new Task(State.TODO,"maktab"));*/
         findView();
         setOnClick();
         setUI();
@@ -55,7 +58,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setData() {
-       //TODO SET DATA TaskRepository.getInstance();
+        for (Fragment fragment:
+             mFragments) {
+            ((WorkListFragment) fragment).addAdapter();
+        }
     }
 
     private void setUI() {
@@ -127,13 +133,12 @@ public class MainActivity extends AppCompatActivity {
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-            return WorkListFragment.newInstance(
+            Fragment fragment = WorkListFragment.newInstance(
                     WorkListFragment.newIntent(
-                            MainActivity.this,
-                            1,
-                            "maktab",
-                            mStates.get(position)
+                            MainActivity.this , mStates.get(position)
                     ));
+            mFragments[position] = fragment;
+            return fragment;
         }
 
         @Override

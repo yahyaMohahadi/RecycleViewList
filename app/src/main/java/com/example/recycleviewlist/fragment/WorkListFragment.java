@@ -1,6 +1,5 @@
 package com.example.recycleviewlist.fragment;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,42 +16,36 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.model.State;
-
-import java.util.Random;
+import com.example.recycleviewlist.model.Task;
+import com.example.recycleviewlist.model.TaskRepository;
 
 
 public class WorkListFragment extends Fragment {
 
 
-    private int mIntNumber;
-    private String mStringName;
     private RecyclerView mRecyclerView;
     //private Random mRandom = new Random();
-    private State mState ;
-    public final static String nameKey = "com.example.recycleviewlist.fragment.nameKey";
-    public final static String numberKey = "com.example.recycleviewlist.fragment.numberKey";
+    private State mState;
     public final static String stateKey = "com.example.recycleviewlist.fragment.stateKey";
 
 
-    public static Intent newIntent(Context context, int number, String name , State state) {
+    public static Intent newIntent(Context context, State state) {
         Intent instance = new Intent(context, WorkListFragment.class);
-        instance.putExtra(nameKey, name);
-        instance.putExtra(numberKey, number);
         instance.putExtra(stateKey, state);
         return instance;
-
     }
 
 
     public static Fragment newInstance(Intent intent) {
         Bundle args = new Bundle();
-        args.putString(nameKey, intent.getStringExtra(nameKey));
-        args.putInt(numberKey, intent.getIntExtra(numberKey, 0));
+     /*   args.putString(nameKey, intent.getStringExtra(nameKey));
+        args.putInt(numberKey, intent.getIntExtra(numberKey, 0));*/
         args.putSerializable(stateKey, intent.getSerializableExtra(stateKey));
         WorkListFragment fragment = new WorkListFragment();
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,17 +55,30 @@ public class WorkListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_work_list, container, false);
-        mStringName = (String) getArguments().getString(nameKey);
-        mIntNumber = (int) getArguments().getInt(numberKey);
         mState = (State) getArguments().getSerializable(stateKey);
         mRecyclerView = view.findViewById(R.id.recucleView_work);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setAdapter(new AdapterTask());
+        addAdapter();
 
         return view;
     }
 
+    public void addAdapter() {
+        mRecyclerView.setAdapter(new AdapterTask());
+    }
+
     private class AdapterTask extends RecyclerView.Adapter {
+        int mIntAll = 0;
+
+        {
+            int position = 0;
+            for (Task task : TaskRepository.getInstance().getTasks()) {
+                if (task.getState() == mState) {
+                    position++;
+                }
+            }
+            mIntAll = position;
+        }
 
         private class HolderTask extends RecyclerView.ViewHolder {
             TextView mTextViewState;
@@ -88,8 +94,18 @@ public class WorkListFragment extends Fragment {
             }
 
             public void bind() {
-                mTextViewName.setText(mStringName);
-                mTextViewState.setText(String.valueOf(mState));
+                String textStr;
+                int position = 0;
+                for (@NonNull Task task : TaskRepository.getInstance().getTasks()) {
+                    if (task.getState() == mState) {
+                        position++;
+                        if (position == getAdapterPosition()) {
+                            mTextViewName.setText(task.getStringName());
+                            mTextViewState.setText(String.valueOf(mState));
+                            return;
+                        }
+                    }
+                }
             }
         }
 
@@ -108,7 +124,7 @@ public class WorkListFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return mIntNumber;
+            return mIntAll;
         }
     }
 

@@ -1,11 +1,12 @@
 package com.example.recycleviewlist.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class TaskRepository implements Reposible {
     private static TaskRepository getInstance;
-    private List<Task> mTasks;
+    private List<Task> mTasks = new ArrayList<>();
 
     public static TaskRepository getInstance() {
         if (getInstance == null) {
