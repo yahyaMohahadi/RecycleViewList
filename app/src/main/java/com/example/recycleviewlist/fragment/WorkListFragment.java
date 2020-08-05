@@ -27,7 +27,7 @@ public class WorkListFragment extends Fragment {
     private int mIntNumber;
     private String mStringName;
     private RecyclerView mRecyclerView;
-    private Random mRandom = new Random();
+    //private Random mRandom = new Random();
     private State mState ;
     public final static String nameKey = "com.example.recycleviewlist.fragment.nameKey";
     public final static String numberKey = "com.example.recycleviewlist.fragment.numberKey";
@@ -79,7 +79,6 @@ public class WorkListFragment extends Fragment {
             TextView mTextViewName;
             LinearLayout mLinearLayoutList;
 
-            @SuppressLint("ResourceAsColor")
             public HolderTask(@NonNull View itemView) {
                 super(itemView);
                 mTextViewState = itemView.findViewById(R.id.textView_state);

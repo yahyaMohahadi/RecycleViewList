@@ -16,6 +16,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.recycleviewlist.fragment.AddFragment;
 import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.fragment.WorkListFragment;
+import com.example.recycleviewlist.model.TaskRepository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -49,10 +50,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0 && resultCode == RESULT_OK){
-            String name = data.getStringExtra(AddFragment.KEY_NAME);
-            int number = data.getIntExtra(AddFragment.KEY_NUMBER,0);
-            State state = (State) data.getSerializableExtra(AddFragment.KEY_STATE);
+            setData();
         }
+    }
+
+    private void setData() {
+       //TODO SET DATA TaskRepository.getInstance();
     }
 
     private void setUI() {
