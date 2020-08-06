@@ -176,10 +176,10 @@ public class WorkListFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            if (mBooleanIsEmpty) {
+/*            if (mBooleanIsEmpty) {
                 return 1;
-            }
-            return mIntAll;
+            }*/
+            return mIntAll+1;
         }
     }
 

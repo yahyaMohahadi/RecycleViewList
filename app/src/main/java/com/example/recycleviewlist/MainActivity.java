@@ -13,11 +13,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.recycleviewlist.fragment.AddFragment;
-import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.fragment.WorkListFragment;
-import com.example.recycleviewlist.model.Task;
-import com.example.recycleviewlist.model.TaskRepository;
+import com.example.recycleviewlist.model.State;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -43,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 /*        TaskRepository.getInstance().addTask(new Task(State.DONE,"maktab"));
         TaskRepository.getInstance().addTask(new Task(State.DOING,"maktab"));
         TaskRepository.getInstance().addTask(new Task(State.TODO,"maktab"));*/
+        setFragments();
         findView();
         setOnClick();
         setUI();
@@ -52,14 +50,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0 && resultCode == RESULT_OK){
-            setData();
+        if (requestCode == 0 && resultCode == RESULT_OK) {
+            mViewPagerTask.setAdapter(new ViewPagerAdapter(this));
         }
     }
 
     private void setData() {
-        for (Fragment fragment:
-             mFragments) {
+        for (Fragment fragment :
+                mFragments) {
             ((WorkListFragment) fragment).addAdapter();
         }
     }
@@ -74,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = AddActivity.getIntentAdd(MainActivity.this);
-                startActivityForResult(intent,0);
+                startActivityForResult(intent, 0);
             }
         });
     }
@@ -85,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels);
             }
+
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
@@ -104,6 +103,17 @@ public class MainActivity extends AppCompatActivity {
         mTextViewToDo = findViewById(R.id.textView_todo);
         mViewPagerTask = findViewById(R.id.ViewPager_task);
         mActionButton = findViewById(R.id.floatingActionButton_add);
+    }
+
+    private void setFragments() {
+        for (int i = 0; i < 3; i++) {
+            Fragment fragment = WorkListFragment.newInstance(
+                    WorkListFragment.newIntent(
+                            MainActivity.this, mStates.get(i)
+                    ));
+            mFragments[i] = fragment;
+
+        }
     }
 
     private void SetTableColors(int position) {
@@ -133,12 +143,8 @@ public class MainActivity extends AppCompatActivity {
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-            Fragment fragment = WorkListFragment.newInstance(
-                    WorkListFragment.newIntent(
-                            MainActivity.this , mStates.get(position)
-                    ));
-            mFragments[position] = fragment;
-            return fragment;
+
+            return mFragments[position];
         }
 
         @Override
