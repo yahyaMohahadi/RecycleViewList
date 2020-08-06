@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,10 +15,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.model.Task;
 import com.example.recycleviewlist.model.TaskRepository;
+
+import static com.example.recycleviewlist.R.drawable.ic_action_doing;
+import static com.example.recycleviewlist.R.drawable.ic_action_done;
+import static com.example.recycleviewlist.R.drawable.ic_action_todo;
+import static com.example.recycleviewlist.R.id;
+import static com.example.recycleviewlist.R.layout;
 
 
 public class WorkListFragment extends Fragment {
@@ -54,9 +60,9 @@ public class WorkListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_work_list, container, false);
+        View view = inflater.inflate(layout.fragment_work_list, container, false);
         mState = (State) getArguments().getSerializable(stateKey);
-        mRecyclerView = view.findViewById(R.id.recucleView_work);
+        mRecyclerView = view.findViewById(id.recucleView_work);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         addAdapter();
 
@@ -69,6 +75,7 @@ public class WorkListFragment extends Fragment {
 
     private class AdapterTask extends RecyclerView.Adapter {
         int mIntAll = 0;
+        boolean mBooleanIsEmpty = true;
 
         {
             int position = 0;
@@ -87,9 +94,9 @@ public class WorkListFragment extends Fragment {
 
             public HolderTask(@NonNull View itemView) {
                 super(itemView);
-                mTextViewState = itemView.findViewById(R.id.textView_state);
-                mTextViewName = itemView.findViewById(R.id.textView_name);
-                mLinearLayoutList = itemView.findViewById(R.id.linear_list);
+                mTextViewState = itemView.findViewById(id.textView_state);
+                mTextViewName = itemView.findViewById(id.textView_name);
+                mLinearLayoutList = itemView.findViewById(id.linear_list);
 
             }
 
@@ -109,21 +116,69 @@ public class WorkListFragment extends Fragment {
             }
         }
 
+        private class HolderEmptyTask extends RecyclerView.ViewHolder {
+            ImageView mImageViewEmptyTask;
+
+            public HolderEmptyTask(@NonNull View itemView) {
+                super(itemView);
+                mImageViewEmptyTask = itemView.findViewById(id.imageView_empty_task);
+            }
+
+            public void bind() {
+                switch (mState) {
+                    case DONE: {
+                        mImageViewEmptyTask.setImageResource(ic_action_done);
+                        break;
+                    }
+                    case TODO: {
+                        mImageViewEmptyTask.setImageResource(ic_action_todo);
+                        break;
+                    }
+                    case DOING: {
+                        mImageViewEmptyTask.setImageResource(ic_action_doing);
+                        break;
+                    }
+                }
+            }
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (mIntAll == 0) {
+                return 0;
+            } else {
+                mBooleanIsEmpty = false;
+                return 1;
+            }
+        }
+
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View view = inflater.inflate(R.layout.list, parent, false);
-            return new HolderTask(view);
+            if (viewType == 1) {
+                View view = inflater.inflate(layout.list, parent, false);
+                return new HolderTask(view);
+            } else {
+                View view = inflater.inflate(layout.image_list_empty_show, parent, false);
+                return new HolderEmptyTask(view);
+            }
         }
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            ((HolderTask) holder).bind();
+            if (mBooleanIsEmpty == true) {
+                ((HolderEmptyTask) holder).bind();
+            } else {
+                ((HolderTask) holder).bind();
+            }
         }
 
         @Override
         public int getItemCount() {
+            if (mBooleanIsEmpty) {
+                return 1;
+            }
             return mIntAll;
         }
     }
