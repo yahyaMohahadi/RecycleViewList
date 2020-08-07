@@ -26,7 +26,7 @@
             android:id="@+id/editText_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name"
+            android:hint="Name of task"
             android:singleLine="true">
 
         </EditText>
@@ -35,12 +35,12 @@
             android:id="@+id/editText_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Number"
+            android:hint="Number of task "
             android:inputType="number"
             android:singleLine="true">
 
         </EditText>
-
+<!--
         <RadioGroup
             android:id="@+id/RadioGroup_state"
             android:layout_width="wrap_content"
@@ -68,6 +68,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="todo" />
-        </RadioGroup>
+        </RadioGroup>-->
     </LinearLayout>
 </RelativeLayout>

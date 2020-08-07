@@ -12,6 +12,7 @@ import android.widget.RadioGroup;
 import androidx.fragment.app.Fragment;
 
 import com.example.recycleviewlist.R;
+import com.example.recycleviewlist.activity.AddActivity;
 import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.model.Task;
 import com.example.recycleviewlist.model.TaskRepository;
@@ -23,17 +24,26 @@ public class AddFragment extends Fragment {
     private RadioGroup mRadioGroupState;
     private State mState = State.DONE;
 
-   /* public static final String KEY_NAME = "com.example.recycleviewlist.fragmentresultName";
-    public static final String KEY_NUMBER = "com.example.recycleviewlist.fragmentresultNumber";
-    public static final String KEY_STATE = "com.example.recycleviewlist.fragmentresultState";*/
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_start, container, false);
         findView(view);
         setOnClick();
+        setArguments();
         return view;
+    }
+
+    private void findView(View view) {
+        mEditTextName = view.findViewById(R.id.editText_name);
+        mEditTextNumber = view.findViewById(R.id.editText_number);
+        mButtonStart = view.findViewById(R.id.button_start);
+        mRadioGroupState = view.findViewById(R.id.RadioGroup_state);
+
+    }
+
+    private void setArguments() {
+        mState = (State) getArguments().getSerializable(AddActivity.KEY_STATE_ADD_FRAG);
     }
 
     private void setOnClick() {
@@ -42,21 +52,16 @@ public class AddFragment extends Fragment {
             public void onClick(View view) {
                 String name = mEditTextName.getText().toString();
                 int number = Integer.parseInt(mEditTextNumber.getText().toString());
-                //startActivity(WorkListActivity.newIntent(getActivity(),number,name));
                 for (int i = 0; i < number; i++) {
                     TaskRepository.getInstance().addTask(new Task(
                             mState, name
                     ));
                 }
-                /*   Intent returnIntent = new Intent();
-                returnIntent.putExtra(KEY_NAME, name);
-                returnIntent.putExtra(KEY_NUMBER, number);
-                returnIntent.putExtra(KEY_STATE, mState);*/
                 getActivity().setResult(getActivity().RESULT_OK, new Intent());
                 getActivity().finish();
             }
         });
-
+        /*
         mRadioGroupState.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
@@ -71,14 +76,6 @@ public class AddFragment extends Fragment {
                         break;
                 }
             }
-        });
-    }
-
-    private void findView(View view) {
-        mEditTextName = view.findViewById(R.id.editText_name);
-        mEditTextNumber = view.findViewById(R.id.editText_number);
-        mButtonStart = view.findViewById(R.id.button_start);
-        mRadioGroupState = view.findViewById(R.id.RadioGroup_state);
-
+        });*/
     }
 }

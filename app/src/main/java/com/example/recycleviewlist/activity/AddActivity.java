@@ -11,9 +11,11 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.fragment.AddFragment;
+import com.example.recycleviewlist.model.State;
 
 public class AddActivity extends AppCompatActivity {
 
+    public static final  String  KEY_STATE_ADD_FRAG = "com.example.recycleviewlist.activitystateForAdd";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,13 +26,15 @@ public class AddActivity extends AppCompatActivity {
         }
     }
 
-    public static Intent getIntentAdd(Context context) {
-        Intent instance = new Intent(context, AddActivity.class);
-        return instance;
+    public static Intent getIntentAdd(Context context, State state) {
+        Intent intent = new Intent(context, AddActivity.class);
+        intent.putExtra(KEY_STATE_ADD_FRAG,state);
+        return intent;
     }
 
     public static Fragment newInstance(Intent intent) {
         Bundle args = new Bundle();
+        args.putSerializable(KEY_STATE_ADD_FRAG,intent.getSerializableExtra(KEY_STATE_ADD_FRAG));
         AddFragment fragment = new AddFragment();
         fragment.setArguments(args);
         return fragment;

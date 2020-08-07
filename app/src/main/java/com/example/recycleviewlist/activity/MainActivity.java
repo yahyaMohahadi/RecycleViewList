@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     TextView mTextViewDone;
     TextView mTextViewToDo;
     TextView mTextViewDoing;
+    int mIntCurrent = 0;
     private FloatingActionButton mActionButton;
     private Fragment[] mFragments = new Fragment[3];
 
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = AddActivity.getIntentAdd(MainActivity.this);
+                Intent intent = AddActivity.getIntentAdd(MainActivity.this,mStates.get(mIntCurrent));
                 startActivityForResult(intent, 0);
             }
         });
@@ -109,7 +110,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                SetTableColors(position);
+                mIntCurrent = position;
+                SetTableColors();
             }
 
             @Override
@@ -138,11 +140,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void SetTableColors(int position) {
+    private void SetTableColors() {
         mTextViewToDo.setBackgroundResource(R.color.color_bachground_table_of);
         mTextViewDone.setBackgroundResource(R.color.color_bachground_table_of);
         mTextViewDoing.setBackgroundResource(R.color.color_bachground_table_of);
-        switch (position) {
+        switch (mIntCurrent) {
             case 0:
                 mTextViewDone.setBackgroundResource(R.color.color_bachground_table_on);
                 break;
