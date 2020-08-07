@@ -44,8 +44,6 @@ public class WorkListFragment extends Fragment {
 
     public static Fragment newInstance(Intent intent) {
         Bundle args = new Bundle();
-     /*   args.putString(nameKey, intent.getStringExtra(nameKey));
-        args.putInt(numberKey, intent.getIntExtra(numberKey, 0));*/
         args.putSerializable(stateKey, intent.getSerializableExtra(stateKey));
         WorkListFragment fragment = new WorkListFragment();
         fragment.setArguments(args);
