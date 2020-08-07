@@ -1,4 +1,4 @@
-package com.example.recycleviewlist;
+package com.example.recycleviewlist.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.fragment.AddFragment;
 
 public class AddActivity extends AppCompatActivity {

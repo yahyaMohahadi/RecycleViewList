@@ -1,4 +1,4 @@
-package com.example.recycleviewlist;
+package com.example.recycleviewlist.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.fragment.WorkListFragment;
 import com.example.recycleviewlist.model.State;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -72,6 +73,30 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, 0);
             }
         });
+        mTextViewDoing.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mViewPagerTask.setCurrentItem(1);
+                    }
+                }
+        );
+        mTextViewDone.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mViewPagerTask.setCurrentItem(0);
+                    }
+                }
+        );
+        mTextViewToDo.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mViewPagerTask.setCurrentItem(2);
+                    }
+                }
+        );
     }
 
     private void setRegisterForViewPager() {
