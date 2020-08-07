@@ -1,50 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".activity.MainActivity">
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/textView_done"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+    <TextView
+        android:id="@+id/textView_done"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="DONE"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintBottom_toTopOf="@+id/ViewPager_task"
+        app:layout_constraintEnd_toStartOf="@+id/textView_doing"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-            android:layout_weight="1"
-            android:text="DONE"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+    <TextView
+        android:id="@+id/textView_doing"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="DOING"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintBottom_toTopOf="@+id/ViewPager_task"
+        app:layout_constraintEnd_toStartOf="@+id/textView_todo"
+        app:layout_constraintStart_toEndOf="@+id/textView_done"
+        app:layout_constraintTop_toTopOf="parent" />
+    />
 
-        <TextView
-            android:id="@+id/textView_doing"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="DOING"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-        />
+    <TextView
+        android:id="@+id/textView_todo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="TODO"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView_doing"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView_doing" /><![CDATA[
+    />
 
-        <TextView
-            android:id="@+id/textView_todo"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="TODO"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-        />
-    </TableRow>
+
+    ]]>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/ViewPager_task"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="10">
+        android:layout_width="419dp"
+        android:layout_height="769dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_todo"
+        tools:layout_editor_absoluteX="0dp">
 
     </androidx.viewpager2.widget.ViewPager2>
 
@@ -52,12 +64,15 @@
         android:id="@+id/floatingActionButton_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="0.2"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
         android:clickable="true"
         android:outlineAmbientShadowColor="#FFFFFF"
         android:outlineSpotShadowColor="#FFFFFF"
         app:backgroundTint="#CFF4D0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -29,10 +29,11 @@ public class AddActivity extends AppCompatActivity {
     public static Intent getIntentAdd(Context context, State state) {
         Intent intent = new Intent(context, AddActivity.class);
         intent.putExtra(KEY_STATE_ADD_FRAG,state);
+        newInstance(intent);
         return intent;
     }
 
-    public static AddFragment newInstance(Intent intent) {
+    private static AddFragment newInstance(Intent intent) {
         Bundle args = new Bundle();
         args.putSerializable(KEY_STATE_ADD_FRAG,intent.getSerializableExtra(KEY_STATE_ADD_FRAG));
         AddFragment fragment = new AddFragment();

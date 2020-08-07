@@ -14,7 +14,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.recycleviewlist.R;
-import com.example.recycleviewlist.fragment.AddFragment;
 import com.example.recycleviewlist.fragment.WorkListFragment;
 import com.example.recycleviewlist.model.State;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -72,8 +71,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = AddActivity.getIntentAdd(MainActivity.this,mStates.get(mIntCurrent));
-                AddActivity.newInstance(intent);
-                AddFragment addFragment = AddActivity.newInstance(intent);
                 startActivityForResult(intent, 0);
             }
         });
