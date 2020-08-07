@@ -37,9 +37,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_work_list_not_fragment);
-/*        TaskRepository.getInstance().addTask(new Task(State.DONE,"maktab"));
-        TaskRepository.getInstance().addTask(new Task(State.DOING,"maktab"));
-        TaskRepository.getInstance().addTask(new Task(State.TODO,"maktab"));*/
         setFragments();
         findView();
         setOnClick();
