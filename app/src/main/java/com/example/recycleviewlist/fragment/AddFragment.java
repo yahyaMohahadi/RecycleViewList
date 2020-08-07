@@ -38,8 +38,6 @@ public class AddFragment extends Fragment {
         mEditTextName = view.findViewById(R.id.editText_name);
         mEditTextNumber = view.findViewById(R.id.editText_number);
         mButtonStart = view.findViewById(R.id.button_start);
-        mRadioGroupState = view.findViewById(R.id.RadioGroup_state);
-
     }
 
     private void setArguments() {
