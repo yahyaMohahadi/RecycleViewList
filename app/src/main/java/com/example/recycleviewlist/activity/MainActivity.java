@@ -8,12 +8,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.recycleviewlist.R;
+import com.example.recycleviewlist.fragment.AddFragment;
 import com.example.recycleviewlist.fragment.WorkListFragment;
 import com.example.recycleviewlist.model.State;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0 && resultCode == RESULT_OK) {
+        if ( resultCode == RESULT_OK) {
             mViewPagerTask.setAdapter(new ViewPagerAdapter(this));
         }
     }
@@ -70,8 +72,10 @@ public class MainActivity extends AppCompatActivity {
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = AddActivity.getIntentAdd(MainActivity.this,mStates.get(mIntCurrent));
-                startActivityForResult(intent, 0);
+                Intent intent = AddFragment.getIntentAdd(mStates.get(mIntCurrent));
+                DialogFragment fragmentAdd = AddFragment.newInstance(intent);
+                fragmentAdd.setTargetFragment(mFragments[mIntCurrent],0);
+                fragmentAdd.show(getSupportFragmentManager(),"TAG");
             }
         });
         mTextViewDoing.setOnClickListener(
