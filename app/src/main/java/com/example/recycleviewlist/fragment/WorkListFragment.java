@@ -15,20 +15,18 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.model.Task;
 import com.example.recycleviewlist.model.TaskRepository;
 
-import static com.example.recycleviewlist.R.drawable.ic_action_doing;
-import static com.example.recycleviewlist.R.drawable.ic_action_done;
-import static com.example.recycleviewlist.R.drawable.ic_action_todo;
 import static com.example.recycleviewlist.R.id;
 import static com.example.recycleviewlist.R.layout;
 
 
 public class WorkListFragment extends Fragment {
 
-
+    private  ImageView  mImageViewEmptyTask;
     private RecyclerView mRecyclerView;
     //private Random mRandom = new Random();
     private State mState;
@@ -62,9 +60,32 @@ public class WorkListFragment extends Fragment {
         mState = (State) getArguments().getSerializable(stateKey);
         mRecyclerView = view.findViewById(id.recucleView_work);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        addAdapter();
-
+        mImageViewEmptyTask = view.findViewById(id.imageView_empty_task);
+        checkIsEmpty();
         return view;
+    }
+
+    private void checkIsEmpty(){
+        mImageViewEmptyTask.setVisibility(View.GONE);
+        if (TaskRepository.getInstance().numberOfState(mState)==0) {
+            mImageViewEmptyTask.setVisibility(View.VISIBLE);
+            switch (mState) {
+                case DONE: {
+                    mImageViewEmptyTask.setImageResource(R.drawable.ic_action_done);
+                    break;
+                }
+                case TODO: {
+                    mImageViewEmptyTask.setImageResource(R.drawable.ic_action_todo);
+                    break;
+                }
+                case DOING: {
+                    mImageViewEmptyTask.setImageResource(R.drawable.ic_action_doing);
+                    break;
+                }
+            }
+        }else {
+            addAdapter();
+        }
     }
 
     public void addAdapter() {
@@ -72,18 +93,6 @@ public class WorkListFragment extends Fragment {
     }
 
     private class AdapterTask extends RecyclerView.Adapter {
-        int mIntAll = 0;
-        boolean mBooleanIsEmpty = true;
-
-        {
-            int position = 0;
-            for (Task task : TaskRepository.getInstance().getTasks()) {
-                if (task.getState() == mState) {
-                    position++;
-                }
-            }
-            mIntAll = position;
-        }
 
         private class HolderTask extends RecyclerView.ViewHolder {
             TextView mTextViewState;
@@ -99,22 +108,15 @@ public class WorkListFragment extends Fragment {
             }
 
             public void bind() {
-                String textStr;
-                int position = 0;
-                for (@NonNull Task task : TaskRepository.getInstance().getTasks()) {
-                    if (task.getState() == mState) {
-                        position++;
-                        if (position == getAdapterPosition()) {
-                            mTextViewName.setText(task.getStringName());
-                            mTextViewState.setText(String.valueOf(mState));
-                            return;
-                        }
-                    }
+                Task task = TaskRepository.getInstance().numberOfTask(getAdapterPosition()+1, mState);
+                if (task!=null) {
+                    mTextViewName.setText(task.getStringName());
+                    mTextViewState.setText(String.valueOf(mState));
                 }
             }
         }
 
-        private class HolderEmptyTask extends RecyclerView.ViewHolder {
+      /*  private class HolderEmptyTask extends RecyclerView.ViewHolder {
             ImageView mImageViewEmptyTask;
 
             public HolderEmptyTask(@NonNull View itemView) {
@@ -138,46 +140,26 @@ public class WorkListFragment extends Fragment {
                     }
                 }
             }
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            if (mIntAll == 0) {
-                return 0;
-            } else {
-                mBooleanIsEmpty = false;
-                return 1;
-            }
-        }
+        }*/
 
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
-            if (viewType == 1) {
-                View view = inflater.inflate(layout.list, parent, false);
-                return new HolderTask(view);
-            } else {
-                View view = inflater.inflate(layout.image_list_empty_show, parent, false);
-                return new HolderEmptyTask(view);
-            }
+            View view = inflater.inflate(layout.list, parent, false);
+            return new HolderTask(view);
+
         }
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            if (mBooleanIsEmpty == true) {
-                ((HolderEmptyTask) holder).bind();
-            } else {
-                ((HolderTask) holder).bind();
-            }
+
+            ((HolderTask) holder).bind();
         }
 
         @Override
         public int getItemCount() {
-/*            if (mBooleanIsEmpty) {
-                return 1;
-            }*/
-            return mIntAll+1;
+            return TaskRepository.getInstance().numberOfState(mState);
         }
     }
 

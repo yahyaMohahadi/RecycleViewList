@@ -62,6 +62,32 @@ public class TaskRepository implements Reposible {
     public void removeTasks() {
         addTasks(null);
     }
+
+    @Override
+    public int numberOfState(State state){
+        int position = 0;
+        for (Task task : mTasks) {
+            if (task.getState() == state) {
+                position++;
+            }
+        }
+        return position;
+    }
+
+    @Override
+    public Task numberOfTask(int number,State state){
+        int position = 0;
+        for (Task task : mTasks) {
+            if (task.getState() == state) {
+                position++;
+            }
+            if (position==number){
+                return task;
+            }
+        }
+        return null;
+    }
+
 }
 
 interface Reposible {
@@ -86,4 +112,8 @@ interface Reposible {
     void removeTask(UUID uuid);
 
     void removeTasks();
+
+    int numberOfState(State state);
+
+    public Task numberOfTask(int number,State state);
 }
