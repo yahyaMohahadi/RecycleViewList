@@ -64,7 +64,7 @@ public class TaskRepository implements Reposible {
     }
 
     @Override
-    public int numberOfState(State state){
+    public int getNumberOfStats(State state) {
         int position = 0;
         for (Task task : mTasks) {
             if (task.getState() == state) {
@@ -75,13 +75,13 @@ public class TaskRepository implements Reposible {
     }
 
     @Override
-    public Task numberOfTask(int number,State state){
+    public Task gerNumberOfTaskWithState(int number, State state) {
         int position = 0;
         for (Task task : mTasks) {
             if (task.getState() == state) {
                 position++;
             }
-            if (position==number){
+            if (position == number) {
                 return task;
             }
         }
@@ -113,7 +113,7 @@ interface Reposible {
 
     void removeTasks();
 
-    int numberOfState(State state);
+    int getNumberOfStats(State state);
 
-    public Task numberOfTask(int number,State state);
+    Task gerNumberOfTaskWithState(int number, State state);
 }

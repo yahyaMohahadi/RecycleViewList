@@ -26,7 +26,7 @@ import static com.example.recycleviewlist.R.layout;
 
 public class WorkListFragment extends Fragment {
 
-    private  ImageView  mImageViewEmptyTask;
+    private ImageView mImageViewEmptyTask;
     private RecyclerView mRecyclerView;
     //private Random mRandom = new Random();
     private State mState;
@@ -65,9 +65,9 @@ public class WorkListFragment extends Fragment {
         return view;
     }
 
-    private void checkIsEmpty(){
+    private void checkIsEmpty() {
         mImageViewEmptyTask.setVisibility(View.GONE);
-        if (TaskRepository.getInstance().numberOfState(mState)==0) {
+        if (TaskRepository.getInstance().getNumberOfStats(mState) == 0) {
             mImageViewEmptyTask.setVisibility(View.VISIBLE);
             switch (mState) {
                 case DONE: {
@@ -83,7 +83,7 @@ public class WorkListFragment extends Fragment {
                     break;
                 }
             }
-        }else {
+        } else {
             addAdapter();
         }
     }
@@ -108,8 +108,9 @@ public class WorkListFragment extends Fragment {
             }
 
             public void bind() {
-                Task task = TaskRepository.getInstance().numberOfTask(getAdapterPosition()+1, mState);
-                if (task!=null) {
+                Task task = TaskRepository.getInstance()
+                        .gerNumberOfTaskWithState(getAdapterPosition() + 1, mState);
+                if (task != null) {
                     mTextViewName.setText(task.getStringName());
                     mTextViewState.setText(String.valueOf(mState));
                 }
@@ -159,7 +160,7 @@ public class WorkListFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return TaskRepository.getInstance().numberOfState(mState);
+            return TaskRepository.getInstance().getNumberOfStats(mState);
         }
     }
 
