@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_work_list);
+        setContentView(R.layout.activity_work_view_pager);
         setFragments();
         findView();
         setOnClick();
