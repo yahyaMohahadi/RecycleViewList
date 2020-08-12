@@ -29,7 +29,7 @@ public class WorkListFragment extends Fragment {
 
     private ImageView mImageViewEmptyTask;
     private RecyclerView mRecyclerView;
-    //private Random mRandom = new Random();
+    private AdapterTask mAdapterTask;
     private State mState;
     public final static String stateKey = "com.example.recycleviewlist.fragment.stateKey";
 
@@ -85,18 +85,23 @@ public class WorkListFragment extends Fragment {
                 }
             }
         } else {
-            addAdapter();
+            if(mAdapterTask==null) {
+                addAdapter();
+            }else {
+                mAdapterTask.notifyDataSetChanged();
+            }
         }
     }
 
     public void addAdapter() {
-        mRecyclerView.setAdapter(new AdapterTask());
+        mAdapterTask = new AdapterTask();
+        mRecyclerView.setAdapter(mAdapterTask);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        addAdapter();
+        checkIsEmpty();
     }
 
     private class AdapterTask extends RecyclerView.Adapter {
@@ -123,32 +128,6 @@ public class WorkListFragment extends Fragment {
                 }
             }
         }
-
-      /*  private class HolderEmptyTask extends RecyclerView.ViewHolder {
-            ImageView mImageViewEmptyTask;
-
-            public HolderEmptyTask(@NonNull View itemView) {
-                super(itemView);
-                mImageViewEmptyTask = itemView.findViewById(id.imageView_empty_task);
-            }
-
-            public void bind() {
-                switch (mState) {
-                    case DONE: {
-                        mImageViewEmptyTask.setImageResource(ic_action_done);
-                        break;
-                    }
-                    case TODO: {
-                        mImageViewEmptyTask.setImageResource(ic_action_todo);
-                        break;
-                    }
-                    case DOING: {
-                        mImageViewEmptyTask.setImageResource(ic_action_doing);
-                        break;
-                    }
-                }
-            }
-        }*/
 
         @NonNull
         @Override

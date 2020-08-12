@@ -1,46 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.AddFragment">
 
-    <Button
-        android:id="@+id/button_start"
+
+    <EditText
+        android:id="@+id/editText_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:gravity="bottom|center"
-        android:text="add" />
+        android:hint="Name of task"
+        android:singleLine="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    </EditText>
+
+    <EditText
+        android:id="@+id/editText_number"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_centerHorizontal="false"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:hint="Number of task "
+        android:inputType="number"
+        android:singleLine="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_name">
 
-        <EditText
-            android:id="@+id/editText_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Name of task"
-            android:singleLine="true">
-
-        </EditText>
-
-        <EditText
-            android:id="@+id/editText_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Number of task "
-            android:inputType="number"
-            android:singleLine="true">
-
-        </EditText>
-<!--
+    </EditText>
+    <!--
         <RadioGroup
             android:id="@+id/RadioGroup_state"
             android:layout_width="wrap_content"
@@ -69,5 +61,5 @@
                 android:layout_height="wrap_content"
                 android:text="todo" />
         </RadioGroup>-->
-    </LinearLayout>
-</RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
