@@ -1,4 +1,7 @@
-package com.example.recycleviewlist.model;
+package com.example.recycleviewlist.model.repository.taskRepository;
+
+import com.example.recycleviewlist.model.State;
+import com.example.recycleviewlist.model.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,4 +119,6 @@ interface Reposible {
     int getNumberOfStats(State state);
 
     Task gerNumberOfTaskWithState(int number, State state);
+
+   // void setDate(LocaleData localeData);
 }

@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.model.Task;
-import com.example.recycleviewlist.model.TaskRepository;
+import com.example.recycleviewlist.model.repository.taskRepository.TaskRepository;
 
 import static com.example.recycleviewlist.R.id;
 import static com.example.recycleviewlist.R.layout;
@@ -70,24 +70,11 @@ public class WorkListFragment extends Fragment {
         mImageViewEmptyTask.setVisibility(View.GONE);
         if (TaskRepository.getInstance().getNumberOfStats(mState) == 0) {
             mImageViewEmptyTask.setVisibility(View.VISIBLE);
-            switch (mState) {
-                case DONE: {
-                    mImageViewEmptyTask.setImageResource(R.drawable.ic_action_done);
-                    break;
-                }
-                case TODO: {
-                    mImageViewEmptyTask.setImageResource(R.drawable.ic_action_todo);
-                    break;
-                }
-                case DOING: {
-                    mImageViewEmptyTask.setImageResource(R.drawable.ic_action_doing);
-                    break;
-                }
-            }
+            mImageViewEmptyTask.setImageResource(R.drawable.empty_pic);
         } else {
-            if(mAdapterTask==null) {
+            if (mAdapterTask == null) {
                 addAdapter();
-            }else {
+            } else {
                 mAdapterTask.notifyDataSetChanged();
             }
         }

@@ -32,6 +32,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editText_name">
 
     </EditText>
+
     <!--
         <RadioGroup
             android:id="@+id/RadioGroup_state"

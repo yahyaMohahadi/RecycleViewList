@@ -18,7 +18,7 @@ import androidx.fragment.app.Fragment;
 import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.model.Task;
-import com.example.recycleviewlist.model.TaskRepository;
+import com.example.recycleviewlist.model.repository.taskRepository.TaskRepository;
 
 public class AddFragment extends DialogFragment {
     private EditText mEditTextNumber;
