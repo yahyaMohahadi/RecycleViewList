@@ -52,7 +52,8 @@ public class TaskRepository implements Reposible {
     }
 
     @Override
-    public void setTask(UUID uuid, Task task) {
+    public void setTask( Task task) {
+        UUID uuid = task.getUUID();
         mTasks.set(getPosition(uuid), task);
     }
 
@@ -110,7 +111,7 @@ interface Reposible {
 
     List<Task> getTasks();
 
-    void setTask(UUID uuid, Task task);
+    void setTask(Task task);
 
     void removeTask(UUID uuid);
 

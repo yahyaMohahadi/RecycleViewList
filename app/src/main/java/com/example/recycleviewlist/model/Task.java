@@ -1,16 +1,22 @@
 package com.example.recycleviewlist.model;
 
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
-public class Task {
+public class Task implements Serializable {
     private UUID mUUID;
     private State mState;
-    private String mStringName;
+    private String mStringTitle;
+    private String mStringDescription;
+    private Date mDate;
 
-    public Task(State state, String stringName) {
+    public Task(State state, String stringTitle) {
         mUUID = UUID.randomUUID();
         mState = state;
-        mStringName = stringName;
+        mStringTitle = stringTitle;
+        mDate = new Date();
     }
 
     public Task() {
@@ -25,15 +31,41 @@ public class Task {
         mState = state;
     }
 
-    public String getStringName() {
-        return mStringName;
+    public String getStringTitle() {
+        return mStringTitle;
     }
 
-    public void setStringName(String stringName) {
-        mStringName = stringName;
+    public void setStringTitle(String stringTitle) {
+        mStringTitle = stringTitle;
     }
 
     public UUID getUUID() {
         return mUUID;
+    }
+
+    public String getStringDescription() {
+        return mStringDescription;
+    }
+
+    public void setStringDescription(String stringDescription) {
+        mStringDescription = stringDescription;
+    }
+
+    public Date getDate() {
+        return mDate;
+    }
+
+    public String getDateYMD(){
+        String ymd = new SimpleDateFormat("yyyy-MM-dd").format(mDate);
+        return ymd;
+    }
+
+    public String getTimeHMS(){
+        String hms = new SimpleDateFormat("hh-mm-ss").format(mDate);
+        return hms;
+    }
+
+    public void setDate(Date date) {
+        mDate = date;
     }
 }

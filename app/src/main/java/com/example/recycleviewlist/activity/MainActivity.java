@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -15,9 +14,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.recycleviewlist.R;
-import com.example.recycleviewlist.fragment.AddFragment;
+import com.example.recycleviewlist.model.StateHandler;
+import com.example.recycleviewlist.fragment.TaskHandleFragment;
 import com.example.recycleviewlist.fragment.WorkListFragment;
 import com.example.recycleviewlist.model.State;
+import com.example.recycleviewlist.model.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
 
+    public static final int REQUEST_COD_ADD = 0;
     ViewPager2 mViewPagerTask;
     List<State> mStates = new ArrayList<>(Arrays.asList(State.DONE, State.DOING, State.TODO));
     TextView mTextViewDone;
@@ -48,14 +50,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if ( resultCode == RESULT_OK) {
-            mViewPagerTask.setAdapter(new ViewPagerAdapter(this));
-        }
-    }
-
     private void setData() {
         for (Fragment fragment :
                 mFragments) {
@@ -72,9 +66,9 @@ public class MainActivity extends AppCompatActivity {
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = AddFragment.getIntentAdd(mStates.get(mIntCurrent));
-                DialogFragment fragmentAdd = AddFragment.newInstance(intent);
-                fragmentAdd.setTargetFragment(mFragments[mIntCurrent],0);
+                Intent intent = TaskHandleFragment.getIntentHandel(StateHandler.NEW,new Task(mStates.get(mIntCurrent),""));
+                DialogFragment fragmentAdd = TaskHandleFragment.newInstance(intent);
+                fragmentAdd.setTargetFragment(mFragments[mIntCurrent], REQUEST_COD_ADD);
                 fragmentAdd.show(getSupportFragmentManager(),"TAG");
             }
         });

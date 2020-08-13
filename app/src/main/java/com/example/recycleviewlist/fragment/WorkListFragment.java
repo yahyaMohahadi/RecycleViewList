@@ -7,17 +7,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.model.State;
+import com.example.recycleviewlist.model.StateHandler;
 import com.example.recycleviewlist.model.Task;
 import com.example.recycleviewlist.model.repository.taskRepository.TaskRepository;
 
@@ -32,6 +34,7 @@ public class WorkListFragment extends Fragment {
     private AdapterTask mAdapterTask;
     private State mState;
     public final static String stateKey = "com.example.recycleviewlist.fragment.stateKey";
+    public static final int REQUEST_COD_EDIT = 1;
 
 
     public static Intent newIntent(Context context, State state) {
@@ -94,24 +97,46 @@ public class WorkListFragment extends Fragment {
     private class AdapterTask extends RecyclerView.Adapter {
 
         private class HolderTask extends RecyclerView.ViewHolder {
-            TextView mTextViewState;
             TextView mTextViewName;
-            LinearLayout mLinearLayoutList;
+            ImageView mImageViewState;
+            ConstraintLayout mConstraintLayout;
+            private Task mTask;
 
             public HolderTask(@NonNull View itemView) {
                 super(itemView);
-                mTextViewState = itemView.findViewById(id.textView_state);
                 mTextViewName = itemView.findViewById(id.textView_name);
-                mLinearLayoutList = itemView.findViewById(id.linear_list);
+                mConstraintLayout = itemView.findViewById(id.constrain_list);
+                mImageViewState = itemView.findViewById(id.imageView_state);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = TaskHandleFragment.getIntentHandel(StateHandler.EDIT, mTask);
+                        DialogFragment fragmentAdd = TaskHandleFragment.newInstance(intent);
+                        fragmentAdd.setTargetFragment(WorkListFragment.this, REQUEST_COD_EDIT);
+                        fragmentAdd.show(getActivity().getSupportFragmentManager(), "TAG");
+                    }
+                });
 
             }
 
-            public void bind() {
-                Task task = TaskRepository.getInstance()
-                        .gerNumberOfTaskWithState(getAdapterPosition() + 1, mState);
+            public void bind(Task task) {
+                mTask = task;
                 if (task != null) {
-                    mTextViewName.setText(task.getStringName());
-                    mTextViewState.setText(String.valueOf(mState));
+                    mTextViewName.setText(task.getStringTitle());
+                }
+                switch (mTask.getState()){
+                    case DOING:{
+                        mImageViewState.setImageResource(R.drawable.ic_doing);
+                        break;
+                    }
+                    case TODO: {
+                        mImageViewState.setImageResource(R.drawable.ic_todo);
+                        break;
+                    }
+                    case DONE:{
+                        mImageViewState.setImageResource(R.drawable.ic_done);
+                        break;
+                    }
                 }
             }
         }
@@ -128,7 +153,7 @@ public class WorkListFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-            ((HolderTask) holder).bind();
+            ((HolderTask) holder).bind(TaskRepository.getInstance().gerNumberOfTaskWithState(position + 1, mState));
         }
 
         @Override
