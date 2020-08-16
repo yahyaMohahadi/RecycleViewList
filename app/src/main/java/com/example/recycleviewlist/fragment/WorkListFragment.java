@@ -69,18 +69,26 @@ public class WorkListFragment extends Fragment {
         return view;
     }
 
-    private void checkIsEmpty() {
-        mImageViewEmptyTask.setVisibility(View.GONE);
+    public void checkIsEmpty() {
+
         if (TaskRepository.getInstance().getNumberOfStats(mState) == 0) {
-            mImageViewEmptyTask.setVisibility(View.VISIBLE);
-            mImageViewEmptyTask.setImageResource(R.drawable.empty_pic);
+            if (mRecyclerView != null) {
+                mRecyclerView.setVisibility(View.GONE);
+            }
+            if (mImageViewEmptyTask != null) {
+                mImageViewEmptyTask.setVisibility(View.VISIBLE);
+                mImageViewEmptyTask.setImageResource(R.drawable.empty_pic);
+            }
         } else {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mImageViewEmptyTask.setVisibility(View.GONE);
             if (mAdapterTask == null) {
                 addAdapter();
             } else {
                 mAdapterTask.notifyDataSetChanged();
             }
         }
+
     }
 
     public void addAdapter() {
@@ -124,8 +132,8 @@ public class WorkListFragment extends Fragment {
                 if (task != null) {
                     mTextViewName.setText(task.getStringTitle());
                 }
-                switch (mTask.getState()){
-                    case DOING:{
+                switch (mTask.getState()) {
+                    case DOING: {
                         mImageViewState.setImageResource(R.drawable.ic_doing);
                         break;
                     }
@@ -133,7 +141,7 @@ public class WorkListFragment extends Fragment {
                         mImageViewState.setImageResource(R.drawable.ic_todo);
                         break;
                     }
-                    case DONE:{
+                    case DONE: {
                         mImageViewState.setImageResource(R.drawable.ic_done);
                         break;
                     }

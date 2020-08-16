@@ -1,11 +1,13 @@
 package com.example.recycleviewlist.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -14,10 +16,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.recycleviewlist.R;
-import com.example.recycleviewlist.model.StateHandler;
 import com.example.recycleviewlist.fragment.TaskHandleFragment;
 import com.example.recycleviewlist.fragment.WorkListFragment;
 import com.example.recycleviewlist.model.State;
+import com.example.recycleviewlist.model.StateHandler;
 import com.example.recycleviewlist.model.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -37,8 +39,11 @@ public class MainActivity extends AppCompatActivity {
     int mIntCurrent = 0;
     private FloatingActionButton mActionButton;
     private Fragment[] mFragments = new Fragment[3];
+/*    private static Fragment mFragmentCurent;
+    private static FragmentManager sFragmentManager;*/
 
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
         findView();
         setOnClick();
         setUI();
-
     }
 
     private void setData() {
@@ -62,12 +66,20 @@ public class MainActivity extends AppCompatActivity {
         setRegisterForViewPager();
     }
 
+/*    public static Fragment getCurentFragment(){
+        return mFragmentCurent;
+    }
+    public static FragmentManager getFragmentManagere(){
+        return sFragmentManager;
+    }*/
     private void setOnClick() {
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = TaskHandleFragment.getIntentHandel(StateHandler.NEW,new Task(mStates.get(mIntCurrent),""));
                 DialogFragment fragmentAdd = TaskHandleFragment.newInstance(intent);
+         /*       mFragmentCurent = mFragments[mIntCurrent];
+                sFragmentManager = getSupportFragmentManager();*/
                 fragmentAdd.setTargetFragment(mFragments[mIntCurrent], REQUEST_COD_ADD);
                 fragmentAdd.show(getSupportFragmentManager(),"TAG");
             }
@@ -109,12 +121,15 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 mIntCurrent = position;
-                SetTableColors();
+                setTableColors();
+                ((WorkListFragment)mFragments[position]).checkIsEmpty();
+
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
                 super.onPageScrollStateChanged(state);
+
             }
         });
     }
@@ -138,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void SetTableColors() {
+    private void setTableColors() {
         mTextViewToDo.setBackgroundResource(R.color.color_bachground_table_of);
         mTextViewDone.setBackgroundResource(R.color.color_bachground_table_of);
         mTextViewDoing.setBackgroundResource(R.color.color_bachground_table_of);
@@ -164,9 +179,9 @@ public class MainActivity extends AppCompatActivity {
 
         @NonNull
         @Override
-        public Fragment createFragment(int position) {
+        public WorkListFragment createFragment(int position) {
 
-            return mFragments[position];
+            return (WorkListFragment) mFragments[position];
         }
 
         @Override

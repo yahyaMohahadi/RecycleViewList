@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -26,12 +28,16 @@ import java.io.Serializable;
 
 public class TaskHandleFragment extends DialogFragment {
     private EditText mEditTextName;
+    private EditText mEditTextDiscreption;
     private Button mButtonDatePicker;
     private Button mButtonTimePicker;
     private Task mTask;
     private State mState = State.DONE;
     private StateHandler mStateHandler;
-
+    private RadioGroup mRadioGroupStete;
+    private RadioButton mRadioButtonDone;
+    private RadioButton mRadioButtonDoing;
+    private RadioButton mRadioButtonTodo;
     public static final String KEY_STATE_HANDLER = "com.example.recycleviewlist.activitystateForAdd";
     public static final String KEY_STATE_TASK = "com.example.recycleviewlist.actitaskKey";
     public static final int DATE_PICKER_REQUEST_CODE = 2;
@@ -55,42 +61,63 @@ public class TaskHandleFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View view = inflater.inflate(R.layout.fragment_start, null);
+        View view = inflater.inflate(R.layout.handler_dialog_fragment, null);
         findView(view);
         setOnClick();
         setArguments();
         initViews();
+
         return new AlertDialog.Builder(getActivity())
                 .setTitle(mStateHandler == StateHandler.NEW ?
                         "new Task " + mState.toString() :
                         "editing task")
-                .setIcon(R.mipmap.ic_launcher)
+                .setIcon(R.drawable.ic_task_handeler)
                 .setView(view)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int j) {
                         okClick();
-                        setResult();
+                        setResult(Activity.RESULT_OK);
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null)
+                .setNeutralButton("delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int j) {
+                        deleteTask();
+                        setResult(Activity.RESULT_CANCELED);
+                    }
+                })
                 .create();
     }
 
+    private void deleteTask() {
+        TaskRepository.getInstance().removeTask(mTask.getUUID());
+    }
+
     private void initViews() {
-        mButtonDatePicker.setText(mTask.getDateYMD());
-        mButtonTimePicker.setText(mTask.getTimeHMS());
+        setStateRadioGroup(mTask.getState());
+        if (mStateHandler == StateHandler.NEW) {
+            mButtonDatePicker.setText(mTask.getDateYMD());
+            mButtonTimePicker.setText(mTask.getTimeHMS());
+        } else {
+            mEditTextDiscreption.setText(mTask.getStringDescription());
+            mEditTextName.setText(mTask.getStringTitle());
+        }
     }
 
     private void setOnClick() {
         mButtonDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-/*                DatePickerFragment datePickerFragment = (DatePickerFragment) DatePickerFragment.newInstance(mTask.getDate());
+                //TODO FIND fRAGMENT
+                //DatePickerFragment datePickerFragment = (DatePickerFragment) DatePickerFragment.newInstance(mTask.getDate());
 
-                datePickerFragment.setTargetFragment(TaskHandleFragment.this, DATE_PICKER_REQUEST_CODE);
+                //datePickerFragment.setTargetFragment(MainActivity.getCurentFragment(), DATE_PICKER_REQUEST_CODE);
 
-                datePickerFragment.show(getFragmentManager(), "DIALOG_FRAGMENT_TAG");*/
+                //getDialog().dismiss();
+                //FragmentManager fragmentManager = getParentFragment().getFragmentManager();
+                //datePickerFragment.show(MainActivity.getFragmentManagere(), "DIALOG_FRAGMENT_TAG");
             }
         });
         mButtonTimePicker.setOnClickListener(new View.OnClickListener() {
@@ -104,6 +131,8 @@ public class TaskHandleFragment extends DialogFragment {
     private void okClick() {
         mTask.setStringTitle(mEditTextName.getText().toString());
         mTask.setState(mState);
+        mTask.setStringDescription(mEditTextDiscreption.getText().toString());
+        mTask.setState(getSatateRadioGroup());
         if (mStateHandler == StateHandler.NEW) {
             TaskRepository.getInstance().addTask(mTask);
         } else {
@@ -114,7 +143,7 @@ public class TaskHandleFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_start, container, false);
+        View view = inflater.inflate(R.layout.handler_dialog_fragment, container, false);
         return view;
     }
 
@@ -122,6 +151,12 @@ public class TaskHandleFragment extends DialogFragment {
         mEditTextName = view.findViewById(R.id.editText_name);
         mButtonDatePicker = view.findViewById(R.id.button_date);
         mButtonTimePicker = view.findViewById(R.id.button_time);
+        mRadioGroupStete = view.findViewById(R.id.RadioGroup_state);
+        mEditTextDiscreption = view.findViewById(R.id.editText_discription);
+        mRadioButtonDone = view.findViewById(R.id.radioButton_done);
+        mRadioButtonDoing = view.findViewById(R.id.radioButton_doing);
+        mRadioButtonTodo = view.findViewById(R.id.radioButton_todo);
+
     }
 
     private void setArguments() {
@@ -130,8 +165,42 @@ public class TaskHandleFragment extends DialogFragment {
         mStateHandler = (StateHandler) getArguments().getSerializable(KEY_STATE_HANDLER);
     }
 
-    private void setResult() {
+    private State getSatateRadioGroup() {
+        switch (mRadioGroupStete.getCheckedRadioButtonId()) {
+            case R.id.radioButton_done: {
+                return State.DONE;
+            }
+            case R.id.radioButton_doing: {
+                return State.DOING;
+            }
+            case R.id.radioButton_todo: {
+                return State.TODO;
+            }
+        }
+        return null;
+
+    }
+
+    private void setStateRadioGroup(State state) {
+
+        switch (state) {
+            case DONE: {
+                mRadioButtonDone.setChecked(true);
+                break;
+            }
+            case TODO: {
+                mRadioButtonTodo.setChecked(true);
+                break;
+            }
+            case DOING: {
+                mRadioButtonDoing.setChecked(true);
+                break;
+            }
+        }
+    }
+
+    private void setResult(int result) {
         Fragment fragment = getTargetFragment();
-        fragment.onActivityResult(0, Activity.RESULT_OK, new Intent());
+        fragment.onActivityResult(0, result, new Intent());
     }
 }
