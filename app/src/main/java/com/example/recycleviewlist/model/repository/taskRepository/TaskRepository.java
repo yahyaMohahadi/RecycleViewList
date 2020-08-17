@@ -11,7 +11,7 @@ public class TaskRepository implements Reposible {
     private static TaskRepository getInstance;
     private List<Task> mTasks = new ArrayList<>();
 
-    public static TaskRepository getInstance() {
+    public static TaskRepository getInstance(String user) {
         if (getInstance == null) {
             getInstance = new TaskRepository();
         }

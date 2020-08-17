@@ -9,25 +9,114 @@
     tools:context=".fragment.LoginFragment">
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/button_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:background="#00FFFFFF"
         android:fontFamily="sans-serif-black"
         android:text="sign up"
         android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
         tools:ignore="MissingConstraints" />
 
     <LinearLayout
-        android:id="@+id/linearLayout3"
+        android:id="@+id/LinearLayout_sign_up"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/round_corner"
         android:orientation="vertical"
+        android:padding="8dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-black"
+            android:gravity="center"
+            android:text="Creat Acont"
+            android:textColor="#FDF5F5"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/textView8"
+            style="@style/Widget.AppCompat.TextView.SpinnerItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="sans-serif-black"
+            android:text="User Name"
+            android:textColor="#F6F4F4" />
+
+        <EditText
+            android:id="@+id/editText_use_name_sign_up"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/input_corner"
+            android:ems="10"
+
+            android:inputType="textPersonName"
+            android:padding="8dp"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/textView9"
+            style="@style/Widget.AppCompat.TextView.SpinnerItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="sans-serif-black"
+            android:text="Password"
+            android:textColor="#F6F4F4" />
+
+        <EditText
+            android:id="@+id/editText_password_sign_up"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/input_corner"
+            android:ems="10"
+            android:inputType="textPassword"
+            android:padding="8dp"
+            android:singleLine="true" />
+
+        <Button
+            android:id="@+id/button_sign_up_inner"
+            android:layout_width="62dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/round_button"
+            android:padding="8dp"
+            android:paddingLeft="8dp"
+            android:paddingTop="8dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="8dp"
+            android:text="Creat"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/LinearLayout_login"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_corner"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -55,7 +144,7 @@
             android:textColor="#F6F4F4" />
 
         <EditText
-            android:id="@+id/editTextTextPersonName"
+            android:id="@+id/editText_use_name_login"
             android:layout_width="match_parent"
             android:layout_height="43dp"
             android:layout_marginLeft="8dp"
@@ -64,6 +153,7 @@
             android:ems="10"
 
             android:inputType="textPersonName"
+            android:padding="8dp"
             android:singleLine="true" />
 
         <TextView
@@ -78,7 +168,7 @@
             android:textColor="#F6F4F4" />
 
         <EditText
-            android:id="@+id/editTextTextPersonName2"
+            android:id="@+id/editText_password"
             android:layout_width="match_parent"
             android:layout_height="43dp"
             android:layout_marginLeft="8dp"
@@ -86,10 +176,11 @@
             android:background="@drawable/input_corner"
             android:ems="10"
             android:inputType="textPassword"
+            android:padding="8dp"
             android:singleLine="true" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/button_login"
             android:layout_width="62dp"
             android:layout_height="35dp"
             android:layout_gravity="center"
