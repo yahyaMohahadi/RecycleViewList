@@ -1,13 +1,18 @@
 package com.example.recycleviewlist.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -18,6 +23,8 @@ import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.model.StateHandler;
 import com.example.recycleviewlist.model.Task;
+import com.example.recycleviewlist.model.User;
+import com.example.recycleviewlist.model.repository.userRepository.UserRepository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -27,6 +34,7 @@ import java.util.List;
 public class MainFragment extends Fragment {
 
     public static final int REQUEST_COD_ADD = 0;
+    private static final int REQUEST_COD_ALERT = 3;
     ViewPager2 mViewPagerTask;
     List<State> mStates = new ArrayList<>(Arrays.asList(State.DONE, State.DOING, State.TODO));
     TextView mTextViewDone;
@@ -35,6 +43,9 @@ public class MainFragment extends Fragment {
     int mIntCurrent = 0;
     private FloatingActionButton mActionButton;
     private Fragment[] mFragments = new Fragment[3];
+
+    //TODO make this field for Online User
+    private User mUserOnline = UserRepository.getInstance().getUser(0);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +60,7 @@ public class MainFragment extends Fragment {
         findView(view);
         setOnClick();
         setUI();
+        setHasOptionsMenu(true);
         return view;
     }
 
@@ -59,9 +71,58 @@ public class MainFragment extends Fragment {
                             getActivity(), mStates.get(i)
                     ));
             mFragments[i] = fragment;
-
         }
     }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.main_menu, menu);
+        setMenuSubtitle();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            default: {
+                return super.onOptionsItemSelected(item);
+            }
+            case R.id.actionbar_main_delete_acount: {
+                AlertDialog alertDialog = AlertDialog.newInstance(getActivity(),
+                        StateOrder.DELETE_ACOUNT
+                        ,"Are you sure to delete your acount?\nit means delete all task and settings"
+                        );
+
+                setTargetFragment(mFragments[mIntCurrent], REQUEST_COD_ALERT);
+                alertDialog.show(getActivity().getSupportFragmentManager(), "eee");
+                return true;
+            }
+            case R.id.actionbar_main_delete_tasks: {
+                AlertDialog alertDialog = AlertDialog.newInstance(getActivity(),
+                        StateOrder.DELETE_TASK,
+                        "Are you sure to clear all of your tasks?");
+                setTargetFragment(mFragments[mIntCurrent], REQUEST_COD_ALERT);
+                alertDialog.show(getActivity().getSupportFragmentManager(), "ttt");
+                return true;
+            }
+            case R.id.actionbar_main_logout: {
+                logout();
+                return true;
+            }
+        }
+    }
+
+    private void logout() {
+        startActivity(new Intent(getActivity(), com.example.recycleviewlist.activity.LoginActivity.class));
+    }
+
+
+    private void setMenuSubtitle() {
+        //todo MAAKE SUBTITLE FROM ONLINE USER
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.getSupportActionBar().setSubtitle(mUserOnline.getStringName());
+    }
+
 
     private void findView(View view) {
         mTextViewDoing = view.findViewById(R.id.textView_doing);
