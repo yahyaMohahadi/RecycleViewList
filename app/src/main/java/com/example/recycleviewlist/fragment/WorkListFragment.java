@@ -22,7 +22,6 @@ import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.model.StateHandler;
 import com.example.recycleviewlist.model.Task;
 import com.example.recycleviewlist.model.repository.taskRepository.TaskRepository;
-import com.example.recycleviewlist.model.repository.userRepository.UserRepository;
 
 import static com.example.recycleviewlist.R.id;
 import static com.example.recycleviewlist.R.layout;
@@ -71,8 +70,8 @@ public class WorkListFragment extends Fragment {
     }
 
     public void checkIsEmpty() {
-
-        if (TaskRepository.getInstance(UserRepository.getInstance().getUser(0).getStringName()).getNumberOfStats(mState) == 0) {
+        //todo online user
+        if (TaskRepository.getInstance("root").getNumberOfStats(mState) == 0) {
             if (mRecyclerView != null) {
                 mRecyclerView.setVisibility(View.GONE);
             }
@@ -162,12 +161,12 @@ public class WorkListFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-            ((HolderTask) holder).bind(TaskRepository.getInstance(UserRepository.getInstance().getUser(0).getStringName()).gerNumberOfTaskWithState(position + 1, mState));
+            ((HolderTask) holder).bind(TaskRepository.getInstance("root").gerNumberOfTaskWithState(position + 1, mState));
         }
 
         @Override
         public int getItemCount() {
-            return TaskRepository.getInstance(UserRepository.getInstance().getUser(0).getStringName()).getNumberOfStats(mState);
+            return TaskRepository.getInstance("root").getNumberOfStats(mState);
         }
     }
 

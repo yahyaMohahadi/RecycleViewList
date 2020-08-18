@@ -23,7 +23,6 @@ import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.model.StateHandler;
 import com.example.recycleviewlist.model.Task;
 import com.example.recycleviewlist.model.repository.taskRepository.TaskRepository;
-import com.example.recycleviewlist.model.repository.userRepository.UserRepository;
 
 import java.io.Serializable;
 
@@ -93,7 +92,7 @@ public class TaskHandleFragment extends DialogFragment {
     }
 
     private void deleteTask() {
-        TaskRepository.getInstance(UserRepository.getInstance().getUser(0).getStringName()).removeTask(mTask.getUUID());
+        TaskRepository.getInstance("root").removeTask(mTask.getUUID());
     }
 
     private void initViews() {
@@ -135,9 +134,9 @@ public class TaskHandleFragment extends DialogFragment {
         mTask.setStringDescription(mEditTextDiscreption.getText().toString());
         mTask.setState(getSatateRadioGroup());
         if (mStateHandler == StateHandler.NEW) {
-            TaskRepository.getInstance(UserRepository.getInstance().getUser(0).getStringName()).addTask(mTask);
+            TaskRepository.getInstance("root").addTask(mTask);
         } else {
-            TaskRepository.getInstance(UserRepository.getInstance().getUser(0).getStringName()).setTask(mTask);
+            TaskRepository.getInstance("root").setTask(mTask);
         }
     }
 

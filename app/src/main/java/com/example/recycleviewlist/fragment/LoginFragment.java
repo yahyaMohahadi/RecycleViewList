@@ -1,6 +1,7 @@
 package com.example.recycleviewlist.fragment;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.activity.MainActivity;
-import com.example.recycleviewlist.model.User;
 import com.example.recycleviewlist.model.repository.userRepository.UserRepository;
 
 public class LoginFragment extends Fragment {
@@ -79,8 +79,9 @@ public class LoginFragment extends Fragment {
     }
 
     private void login() {
-        if (UserRepository.getInstance().isUserExist(mEditTextUserNameLogin.getText().toString(),
-                        mEditTextUserPasswordLogin.getText().toString())) {
+        SQLiteDatabase sqLiteDatabase = UserRepository.getInstance(getActivity().getApplicationContext());
+        //TODO declirate login condition
+        if (true) {
             startActivity(new Intent(LoginFragment.this.getActivity(), MainActivity.class));
         } else {
             Toast.makeText(getActivity(), "user not foud try again or sign up",
@@ -94,8 +95,7 @@ public class LoginFragment extends Fragment {
         if (mEditTextUserNameSignUp.getText().toString().equals("") || mEditTextUserPasswordSignUp.getText().toString().equals("")) {
             Toast.makeText(getActivity(), "Fill in all the blanks", Toast.LENGTH_SHORT).show();
         } else {
-            UserRepository.getInstance().addUser(new User(mEditTextUserNameSignUp.getText().toString(),
-                    mEditTextUserPasswordSignUp.getText().toString()));
+            //todo add user in sql
             startActivity(new Intent(LoginFragment.this.getActivity(), MainActivity.class));
             Toast.makeText(getActivity(), "created successfully!", Toast.LENGTH_SHORT).show();
             getActivity().finish();

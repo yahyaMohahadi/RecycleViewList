@@ -1,6 +1,5 @@
 package com.example.recycleviewlist.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,7 +23,6 @@ import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.model.StateHandler;
 import com.example.recycleviewlist.model.Task;
 import com.example.recycleviewlist.model.User;
-import com.example.recycleviewlist.model.repository.userRepository.UserRepository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -45,7 +43,7 @@ public class MainFragment extends Fragment {
     private Fragment[] mFragments = new Fragment[3];
 
     //TODO make this field for Online User
-    private User mUserOnline = UserRepository.getInstance().getUser(0);
+    private User mUserOnline = new User("root","root");
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
