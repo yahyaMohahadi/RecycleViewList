@@ -1,7 +1,6 @@
 package com.example.recycleviewlist.fragment;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,7 +78,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void login() {
-        SQLiteDatabase sqLiteDatabase = UserRepository.getInstance(getActivity().getApplicationContext());
+        UserRepository sqLiteDatabase = UserRepository.getInstance(getActivity().getApplicationContext());
         //TODO declirate login condition
         if (true) {
             startActivity(new Intent(LoginFragment.this.getActivity(), MainActivity.class));

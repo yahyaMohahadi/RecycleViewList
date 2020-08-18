@@ -1,12 +1,8 @@
 package com.example.recycleviewlist.model;
 
-import android.os.Build;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import java.io.Serializable;
-import java.util.Objects;
 import java.util.UUID;
 
 public class User implements Serializable {
@@ -35,17 +31,20 @@ public class User implements Serializable {
     }
 
     public User(@NonNull String stringName, @NonNull String stringUserName) {
-        mStringName = stringName;
-        mStringPassword = stringUserName;
-        mUUID = UUID.randomUUID();
+        this(stringName, stringUserName, UUID.randomUUID().toString());
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public User(@NonNull String stringName, @NonNull String stringUserName, @NonNull String uuid) {
+        mStringName = stringName;
+        mStringPassword = stringUserName;
+        mUUID = UUID.fromString(uuid);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(mUUID, user.mUUID);
+        return mUUID.equals(user.mUUID);
     }
 }
