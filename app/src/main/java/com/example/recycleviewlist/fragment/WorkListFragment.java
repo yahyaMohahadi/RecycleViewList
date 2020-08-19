@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.recycleviewlist.OnlineUser;
 import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.model.StateHandler;
@@ -65,13 +66,14 @@ public class WorkListFragment extends Fragment {
         mRecyclerView = view.findViewById(id.recucleView_work);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mImageViewEmptyTask = view.findViewById(id.imageView_empty_task);
-        checkIsEmpty();
+        checkTasksInDataBase();
         return view;
     }
 
-    public void checkIsEmpty() {
-        //todo online user
-        if (TaskRepository.getInstance("root").getNumberOfStats(mState) == 0) {
+    public void checkTasksInDataBase() {
+        if (TaskRepository.getInstance(
+                getActivity(),
+                OnlineUser.newInstance().getOnlineUser().getUUID()).getNumberOfStats(mState) == 0) {
             if (mRecyclerView != null) {
                 mRecyclerView.setVisibility(View.GONE);
             }
@@ -99,7 +101,7 @@ public class WorkListFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        checkIsEmpty();
+        checkTasksInDataBase();
     }
 
     private class AdapterTask extends RecyclerView.Adapter {
@@ -160,13 +162,17 @@ public class WorkListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
-            ((HolderTask) holder).bind(TaskRepository.getInstance("root").gerNumberOfTaskWithState(position + 1, mState));
+            ((HolderTask) holder).bind(TaskRepository.getInstance(
+                    getActivity().getApplicationContext(),
+                    OnlineUser.newInstance().getOnlineUser().getUUID())
+                    .gerNumberOfTaskWithState(position + 1, mState));
         }
 
         @Override
         public int getItemCount() {
-            return TaskRepository.getInstance("root").getNumberOfStats(mState);
+            return TaskRepository.getInstance(getActivity().getApplicationContext(),
+                    OnlineUser.newInstance().getOnlineUser().getUUID()
+            ).getNumberOfStats(mState);
         }
     }
 

@@ -20,16 +20,16 @@ public class Task implements Serializable {
         mState = state;
         mStringTitle = stringTitle;
         mDate = new Date();
-        mIDUser = OnlineUser.mUserRoot.getUUID();
+        mIDUser = OnlineUser.newInstance().getOnlineUser().getUUID();
     }
 
-    public Task(UUID UUID, UUID IDUser, State state, String stringTitle, String stringDescription, Date date) {
+    public Task(UUID UUID, UUID IDUser, State state, String stringTitle, String stringDescription) {
         mUUID = UUID;
         mIDUser = IDUser;
         mState = state;
         mStringTitle = stringTitle;
         mStringDescription = stringDescription;
-        mDate = date;
+        mDate = new Date();
     }
 
     public UUID getIDUser() {

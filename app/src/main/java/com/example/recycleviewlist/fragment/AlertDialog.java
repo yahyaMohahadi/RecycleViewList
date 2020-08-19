@@ -1,8 +1,10 @@
 package com.example.recycleviewlist.fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +13,10 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.recycleviewlist.OnlineUser;
 import com.example.recycleviewlist.R;
+import com.example.recycleviewlist.model.repository.taskRepository.TaskRepository;
+import com.example.recycleviewlist.model.repository.userRepository.UserRepository;
 
 import java.io.Serializable;
 
@@ -64,12 +69,16 @@ public class AlertDialog extends DialogFragment {
     }
 
     private void doOrder() {
-        //todo do order in repository
         switch (mOrder) {
             case DELETE_TASK: {
+                getTargetFragment().onActivityResult(0, Activity.RESULT_OK,new Intent());
+                TaskRepository.getInstance(getActivity().getApplicationContext(),
+                        OnlineUser.newInstance().getOnlineUser().getUUID()).removeTasks();
                 break;
             }
             case DELETE_ACOUNT: {
+                UserRepository.getInstance(getActivity().getApplicationContext())
+                        .deleteUser(OnlineUser.newInstance().getOnlineUser());
                 break;
             }
         }

@@ -12,8 +12,10 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.recycleviewlist.OnlineUser;
 import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.activity.MainActivity;
+import com.example.recycleviewlist.model.User;
 import com.example.recycleviewlist.model.repository.userRepository.UserRepository;
 
 public class LoginFragment extends Fragment {
@@ -30,15 +32,6 @@ public class LoginFragment extends Fragment {
     private EditText mEditTextUserNameSignUp;
     private EditText mEditTextUserPasswordSignUp;
 
-
-    public static LoginFragment newInstance() {
-        LoginFragment fragment = new LoginFragment();
-        Bundle args = new Bundle();
-   /*     args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);*/
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,16 +70,24 @@ public class LoginFragment extends Fragment {
         });
     }
 
+    //TODO declerate newIntent in mainActivity
     private void login() {
-        UserRepository sqLiteDatabase = UserRepository.getInstance(getActivity().getApplicationContext());
-        //TODO declirate login condition
-        if (true) {
+        User user = UserRepository.getInstance(getActivity().getApplicationContext()).isUserExist(
+                mEditTextUserNameLogin.getText().toString(),
+                mEditTextUserPasswordLogin.getText().toString());
+        if (mEditTextUserNameLogin.getText().toString().equals("root") &&
+                mEditTextUserPasswordLogin.getText().toString().equals("root")) {
+            OnlineUser.newInstance().setOnlineUser(OnlineUser.mUserRoot);
             startActivity(new Intent(LoginFragment.this.getActivity(), MainActivity.class));
+            return;
+        }
+        if (user != null) {
+            OnlineUser.newInstance().setOnlineUser(user);
+            startActivity(new Intent(LoginFragment.this.getActivity(), MainActivity.class));
+            Toast.makeText(getActivity(), "Login successfully!", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), "user not foud try again or sign up",
                     Toast.LENGTH_SHORT).show();
-            Toast.makeText(getActivity(), "Login successfully!", Toast.LENGTH_SHORT).show();
-            getActivity().finish();
         }
     }
 
@@ -94,10 +95,13 @@ public class LoginFragment extends Fragment {
         if (mEditTextUserNameSignUp.getText().toString().equals("") || mEditTextUserPasswordSignUp.getText().toString().equals("")) {
             Toast.makeText(getActivity(), "Fill in all the blanks", Toast.LENGTH_SHORT).show();
         } else {
-            //todo add user in sql
+            User user = new User(mEditTextUserNameSignUp.getText().toString(),
+                    mEditTextUserPasswordSignUp.getText().toString());
+            UserRepository.getInstance(getActivity().getApplicationContext()).addUser(user);
+            OnlineUser.newInstance().setOnlineUser(user);
             startActivity(new Intent(LoginFragment.this.getActivity(), MainActivity.class));
             Toast.makeText(getActivity(), "created successfully!", Toast.LENGTH_SHORT).show();
-            getActivity().finish();
+
         }
     }
 

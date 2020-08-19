@@ -10,8 +10,6 @@ import com.example.recycleviewlist.database.TaskDBReposytory;
 import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.model.Task;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +19,7 @@ public class TaskRepository implements Reposible {
     private static SQLiteDatabase mDatabase;
     private static Context mContext;
     private static UUID mIDUser;
-    private List<Task> mTasks;
+    private List<Task> mTasks = new ArrayList<>();
 
     public static TaskRepository getInstance(Context context, UUID uuidUser) {
         mContext = context;
@@ -29,6 +27,7 @@ public class TaskRepository implements Reposible {
         if (getInstance == null) {
             getInstance = new TaskRepository();
             mDatabase = new TaskDBReposytory(context).getWritableDatabase();
+            getInstance.getTasks();
         }
         return getInstance;
     }
@@ -62,38 +61,42 @@ public class TaskRepository implements Reposible {
     private void getTasks() {
         List<Task> tasks = new ArrayList<>();
         Cursor cursor;
-        if (!OnlineUser.getOnlineUser().equals(OnlineUser.mUserRoot)) {
+        if (!OnlineUser.newInstance().getOnlineUser().equals(OnlineUser.mUserRoot)) {
             cursor = mDatabase.rawQuery("SELECT * FROM " + TaskDBReposytory.COLS.TABLE_NAME +
                             " WHERE " + TaskDBReposytory.COLS.CUL_UUID_USER + " =? ",
-                    new String[]{OnlineUser.getOnlineUser().getUUID().toString()});
+                    new String[]{OnlineUser.newInstance().getOnlineUser().getUUID().toString()});
         } else {
             cursor = mDatabase.rawQuery("SELECT * FROM " + TaskDBReposytory.COLS.TABLE_NAME,
                     new String[]{});
         }
+        Cursor cursor1 = mDatabase.rawQuery("SELECT * FROM " + TaskDBReposytory.COLS.TABLE_NAME,
+                new String[]{});
+//        Log.d("QQQ",cursor1.getCount()+"");
+//        Log.d("QQQ",OnlineUser.newInstance().getOnlineUser().getUUID().toString());
+//        Log.d("QQQ",cursor.getCount()+"whre curcer");
         cursor.moveToFirst();
-        while (cursor.isAfterLast()) {
-            try {
-                Task task = new Task(
-                        UUID.fromString(
-                                cursor.getString(cursor.getColumnIndex(TaskDBReposytory.COLS.CUL_UUID))),
-                        UUID.fromString(
-                                cursor.getString(cursor.getColumnIndex(TaskDBReposytory.COLS.CUL_UUID_USER))),
-                        State.valueOf(
-                                cursor.getString(cursor.getColumnIndex(TaskDBReposytory.COLS.CUL_STATE))),
-                        cursor.getString(cursor.getColumnIndex(TaskDBReposytory.COLS.CUL_TITLE)),
-                        cursor.getString(cursor.getColumnIndex(TaskDBReposytory.COLS.CUL_DESCRIPTION)),
-                        new SimpleDateFormat().parse(
-                                cursor.getString(cursor.getColumnIndex(TaskDBReposytory.COLS.CUL_DATE)))
-                );
+        if (cursor.getCount()!=0) {
+            while (!cursor.isAfterLast()) {
+                Task task = getTaskFromCursor(cursor);
                 tasks.add(task);
-            } catch (ParseException e) {
-                e.printStackTrace();
+                cursor.moveToNext();
             }
-
-            cursor.moveToNext();
         }
         cursor.close();
+//        Log.d("QQQ",tasks.toString());
         mTasks = tasks;
+    }
+
+    private Task getTaskFromCursor(Cursor cursor) {
+        UUID uuid = UUID.fromString(
+                cursor.getString(cursor.getColumnIndex(TaskDBReposytory.COLS.CUL_UUID)));
+        UUID userUuid = UUID.fromString(
+                cursor.getString(cursor.getColumnIndex(TaskDBReposytory.COLS.CUL_UUID_USER)));
+        State state = State.valueOf(
+                cursor.getString(cursor.getColumnIndex(TaskDBReposytory.COLS.CUL_STATE)));
+        String title = cursor.getString(cursor.getColumnIndex(TaskDBReposytory.COLS.CUL_TITLE));
+        String description = cursor.getString(cursor.getColumnIndex(TaskDBReposytory.COLS.CUL_DESCRIPTION));
+        return new Task(uuid, userUuid, state, title, description);
     }
 
     @Override

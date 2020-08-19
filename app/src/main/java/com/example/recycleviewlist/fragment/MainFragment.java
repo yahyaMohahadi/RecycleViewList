@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.recycleviewlist.OnlineUser;
 import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.model.StateHandler;
@@ -41,9 +42,7 @@ public class MainFragment extends Fragment {
     int mIntCurrent = 0;
     private FloatingActionButton mActionButton;
     private Fragment[] mFragments = new Fragment[3];
-
-    //TODO make this field for Online User
-    private User mUserOnline = new User("root","root");
+    private User mUserOnline = OnlineUser.newInstance().getOnlineUser();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +67,7 @@ public class MainFragment extends Fragment {
                     WorkListFragment.newIntent(
                             getActivity(), mStates.get(i)
                     ));
+
             mFragments[i] = fragment;
         }
     }
@@ -75,12 +75,11 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.main_menu, menu);
-        setMenuSubtitle();
+        setMenuView();
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
         switch (item.getItemId()) {
             default: {
                 return super.onOptionsItemSelected(item);
@@ -88,8 +87,8 @@ public class MainFragment extends Fragment {
             case R.id.actionbar_main_delete_acount: {
                 AlertDialog alertDialog = AlertDialog.newInstance(getActivity(),
                         StateOrder.DELETE_ACOUNT
-                        ,"Are you sure to delete your acount?\nit means delete all task and settings"
-                        );
+                        , "Are you sure to delete your acount?\nit means delete all task and settings"
+                );
 
                 setTargetFragment(mFragments[mIntCurrent], REQUEST_COD_ALERT);
                 alertDialog.show(getActivity().getSupportFragmentManager(), "eee");
@@ -108,6 +107,7 @@ public class MainFragment extends Fragment {
                 return true;
             }
         }
+
     }
 
     private void logout() {
@@ -115,10 +115,10 @@ public class MainFragment extends Fragment {
     }
 
 
-    private void setMenuSubtitle() {
-        //todo MAAKE SUBTITLE FROM ONLINE USER
+    private void setMenuView() {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.getSupportActionBar().setSubtitle(mUserOnline.getStringName());
+        activity.getSupportActionBar().setTitle("Task Manager");
     }
 
 
@@ -128,6 +128,7 @@ public class MainFragment extends Fragment {
         mTextViewToDo = view.findViewById(R.id.textView_todo);
         mViewPagerTask = view.findViewById(R.id.ViewPager_task);
         mActionButton = view.findViewById(R.id.floatingActionButton_add);
+
     }
 
     private void setOnClick() {
@@ -183,7 +184,7 @@ public class MainFragment extends Fragment {
                 super.onPageSelected(position);
                 mIntCurrent = position;
                 setTableColors();
-                ((WorkListFragment) mFragments[position]).checkIsEmpty();
+                ((WorkListFragment) mFragments[position]).checkTasksInDataBase();
 
             }
 

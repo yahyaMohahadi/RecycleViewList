@@ -18,13 +18,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import com.example.recycleviewlist.OnlineUser;
 import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.model.StateHandler;
 import com.example.recycleviewlist.model.Task;
 import com.example.recycleviewlist.model.repository.taskRepository.TaskRepository;
-
-import java.io.Serializable;
 
 public class TaskHandleFragment extends DialogFragment {
     private EditText mEditTextName;
@@ -45,7 +44,7 @@ public class TaskHandleFragment extends DialogFragment {
     public static Intent getIntentHandel(StateHandler state, Task task) {
         Intent intent = new Intent();
         intent.putExtra(KEY_STATE_HANDLER, state);
-        intent.putExtra(KEY_STATE_TASK, (Serializable) task);
+        intent.putExtra(KEY_STATE_TASK, task);
         return intent;
     }
 
@@ -92,7 +91,8 @@ public class TaskHandleFragment extends DialogFragment {
     }
 
     private void deleteTask() {
-        TaskRepository.getInstance("root").removeTask(mTask.getUUID());
+        TaskRepository.getInstance(getActivity().getApplicationContext(),
+                OnlineUser.newInstance().getOnlineUser().getUUID()).removeTask(mTask.getUUID());
     }
 
     private void initViews() {
@@ -123,7 +123,7 @@ public class TaskHandleFragment extends DialogFragment {
         mButtonTimePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //TODO FIND fRAGMENT
             }
         });
     }
@@ -134,9 +134,11 @@ public class TaskHandleFragment extends DialogFragment {
         mTask.setStringDescription(mEditTextDiscreption.getText().toString());
         mTask.setState(getSatateRadioGroup());
         if (mStateHandler == StateHandler.NEW) {
-            TaskRepository.getInstance("root").addTask(mTask);
+            TaskRepository.getInstance(getActivity().getApplicationContext(),
+                    OnlineUser.newInstance().getOnlineUser().getUUID()).addTask(mTask);
         } else {
-            TaskRepository.getInstance("root").setTask(mTask);
+            TaskRepository.getInstance(getActivity().getApplicationContext(),
+                    OnlineUser.newInstance().getOnlineUser().getUUID()).setTask(mTask);
         }
     }
 
