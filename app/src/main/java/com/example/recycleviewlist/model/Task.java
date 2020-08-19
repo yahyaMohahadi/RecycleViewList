@@ -1,5 +1,7 @@
 package com.example.recycleviewlist.model;
 
+import com.example.recycleviewlist.OnlineUser;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -7,6 +9,7 @@ import java.util.UUID;
 
 public class Task implements Serializable {
     private UUID mUUID;
+    private UUID mIDUser;
     private State mState;
     private String mStringTitle;
     private String mStringDescription;
@@ -17,6 +20,20 @@ public class Task implements Serializable {
         mState = state;
         mStringTitle = stringTitle;
         mDate = new Date();
+        mIDUser = OnlineUser.mUserRoot.getUUID();
+    }
+
+    public Task(UUID UUID, UUID IDUser, State state, String stringTitle, String stringDescription, Date date) {
+        mUUID = UUID;
+        mIDUser = IDUser;
+        mState = state;
+        mStringTitle = stringTitle;
+        mStringDescription = stringDescription;
+        mDate = date;
+    }
+
+    public UUID getIDUser() {
+        return mIDUser;
     }
 
     public Task() {

@@ -5,6 +5,7 @@ import com.example.recycleviewlist.model.User;
 public class OnlineUser {
     private  static OnlineUser mOnlineUser ;
     private static User onlineUser;
+    public static final User mUserRoot = new User("root","root");
     private OnlineUser(User user) {
         onlineUser = user;
     }
