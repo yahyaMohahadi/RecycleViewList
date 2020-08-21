@@ -23,3 +23,4 @@ public class MainActivity extends SingleFragmentActivity {
                 OnlineUser.newInstance().getOnlineUser().getUUID());
     }
 }
+//todo manage view and ui

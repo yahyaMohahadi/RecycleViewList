@@ -18,7 +18,7 @@ public class LoginActivity extends SingleFragmentActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
-        UserRepository userRepository = UserRepository.getInstance(getApplicationContext());
+        UserRepository.getInstance(getApplicationContext());
 
     }
 }

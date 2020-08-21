@@ -119,11 +119,10 @@
         app:layout_constraintTop_toBottomOf="@+id/textView3">
 
         <RadioButton
-            android:id="@+id/radioButton_done"
+            android:id="@+id/radioButton_todo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
-            android:text="done" />
+            android:text="todo" />
 
         <RadioButton
             android:id="@+id/radioButton_doing"
@@ -133,10 +132,11 @@
             android:text="doing" />
 
         <RadioButton
-            android:id="@+id/radioButton_todo"
+            android:id="@+id/radioButton_done"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="todo" />
+            android:layout_marginRight="8dp"
+            android:text="done" />
     </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

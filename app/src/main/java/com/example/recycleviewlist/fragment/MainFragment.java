@@ -35,7 +35,7 @@ public class MainFragment extends Fragment {
     public static final int REQUEST_COD_ADD = 0;
     private static final int REQUEST_COD_ALERT = 3;
     ViewPager2 mViewPagerTask;
-    List<State> mStates = new ArrayList<>(Arrays.asList(State.DONE, State.DOING, State.TODO));
+    List<State> mStates = new ArrayList<>(Arrays.asList(State.TODO, State.DOING, State.DONE));
     TextView mTextViewDone;
     TextView mTextViewToDo;
     TextView mTextViewDoing;
@@ -104,6 +104,7 @@ public class MainFragment extends Fragment {
             }
             case R.id.actionbar_main_logout: {
                 logout();
+                getActivity().finish();
                 return true;
             }
         }
