@@ -33,7 +33,6 @@ public abstract class Picker extends DialogFragment {
 
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.picker_dialog_alert_fragment, null);
 
-        findView(view);
         initPicker();
         return new AlertDialog.Builder(getActivity())
                 .setIcon(pickerIcon())
@@ -55,14 +54,11 @@ public abstract class Picker extends DialogFragment {
     abstract void initPicker();
     //TODO init whith date
 
-    abstract int pickerView();
+    abstract View pickerView();
     //TODO RETURN View picker
 
     abstract int pickerIcon();
     //TODO RETURN icon picker
 
 
-    private void findView(View view) {
-        mDatePicker = view.findViewById(pickerView());
-    }
 }

@@ -1,5 +1,6 @@
 package com.example.recycleviewlist.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recycleviewlist.OnlineUser;
 import com.example.recycleviewlist.R;
+import com.example.recycleviewlist.fragment.pickers.DatePickerFragment;
+import com.example.recycleviewlist.fragment.pickers.Picker;
+import com.example.recycleviewlist.fragment.pickers.TimePickerFragment;
 import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.model.StateHandler;
 import com.example.recycleviewlist.model.Task;
@@ -32,6 +36,8 @@ public class WorkListFragment extends Fragment {
 
     public final static String stateKey = "com.example.recycleviewlist.fragment.stateKey";
     public static final int REQUEST_COD_EDIT = 1;
+    public static final int REQUEST_CODE_DATEPICKER = 3;
+    public static final int REQUEST_CODE_TIME_PICKER = 4;
     private ImageView mImageViewEmptyTask;
     private RecyclerView mRecyclerView;
     private AdapterTask mAdapterTask;
@@ -56,6 +62,7 @@ public class WorkListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,6 +108,13 @@ public class WorkListFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         checkTasksInDataBase();
+        if (resultCode != Activity.RESULT_OK || data == null) {
+            return;
+        } else if (requestCode == REQUEST_CODE_DATEPICKER) {
+
+        } else if (requestCode == REQUEST_CODE_TIME_PICKER) {
+
+        }
     }
 
     private class AdapterTask extends RecyclerView.Adapter {
@@ -131,7 +145,6 @@ public class WorkListFragment extends Fragment {
 
         private class HolderTask extends RecyclerView.ViewHolder {
             TextView mTextViewName;
-            ImageView mImageViewState;
             ConstraintLayout mConstraintLayout;
             private Task mTask;
 
@@ -139,7 +152,6 @@ public class WorkListFragment extends Fragment {
                 super(itemView);
                 mTextViewName = itemView.findViewById(id.textView_name);
                 mConstraintLayout = itemView.findViewById(id.constrain_list);
-                mImageViewState = itemView.findViewById(id.imageView_state);
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -149,7 +161,26 @@ public class WorkListFragment extends Fragment {
                         fragmentAdd.show(getActivity().getSupportFragmentManager(), "TAG");
                     }
                 });
-
+                itemView.findViewById(id.imageView_time).setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Picker time = (Picker) TimePickerFragment.newInstance(mTask);
+                                time.setTargetFragment(WorkListFragment.this, REQUEST_CODE_TIME_PICKER);
+                                time.show(getFragmentManager(), "tag");
+                            }
+                        }
+                );
+                itemView.findViewById(id.imageView_calandar).setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Picker calander = (Picker) DatePickerFragment.newInstance(mTask);
+                                calander.setTargetFragment(WorkListFragment.this, REQUEST_CODE_DATEPICKER);
+                                calander.show(getFragmentManager(), "tag");
+                            }
+                        }
+                );
             }
 
             public void bind(Task task) {
@@ -157,7 +188,7 @@ public class WorkListFragment extends Fragment {
                 if (task != null) {
                     mTextViewName.setText(task.getStringTitle());
                 }
-                switch (mTask.getState()) {
+               /* switch (mTask.getState()) {
                     case DOING: {
                         mImageViewState.setImageResource(R.drawable.ic_doing);
                         break;
@@ -170,9 +201,10 @@ public class WorkListFragment extends Fragment {
                         mImageViewState.setImageResource(R.drawable.ic_done);
                         break;
                     }
-                }
+                }*/
             }
         }
     }
+
 
 }
