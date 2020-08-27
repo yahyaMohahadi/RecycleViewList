@@ -30,13 +30,12 @@ import static com.example.recycleviewlist.R.layout;
 
 public class WorkListFragment extends Fragment {
 
+    public final static String stateKey = "com.example.recycleviewlist.fragment.stateKey";
+    public static final int REQUEST_COD_EDIT = 1;
     private ImageView mImageViewEmptyTask;
     private RecyclerView mRecyclerView;
     private AdapterTask mAdapterTask;
     private State mState;
-    public final static String stateKey = "com.example.recycleviewlist.fragment.stateKey";
-    public static final int REQUEST_COD_EDIT = 1;
-
 
     public static Intent newIntent(Context context, State state) {
         Intent instance = new Intent(context, WorkListFragment.class);
@@ -106,6 +105,30 @@ public class WorkListFragment extends Fragment {
 
     private class AdapterTask extends RecyclerView.Adapter {
 
+        @NonNull
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            View view = inflater.inflate(layout.list, parent, false);
+            return new HolderTask(view);
+
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+            ((HolderTask) holder).bind(TaskRepository.getInstance(
+                    getActivity().getApplicationContext(),
+                    OnlineUser.newInstance().getOnlineUser().getUUID())
+                    .gerNumberOfTaskWithState(position + 1, mState));
+        }
+
+        @Override
+        public int getItemCount() {
+            return TaskRepository.getInstance(getActivity().getApplicationContext(),
+                    OnlineUser.newInstance().getOnlineUser().getUUID()
+            ).getNumberOfStats(mState);
+        }
+
         private class HolderTask extends RecyclerView.ViewHolder {
             TextView mTextViewName;
             ImageView mImageViewState;
@@ -149,30 +172,6 @@ public class WorkListFragment extends Fragment {
                     }
                 }
             }
-        }
-
-        @NonNull
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View view = inflater.inflate(layout.list, parent, false);
-            return new HolderTask(view);
-
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            ((HolderTask) holder).bind(TaskRepository.getInstance(
-                    getActivity().getApplicationContext(),
-                    OnlineUser.newInstance().getOnlineUser().getUUID())
-                    .gerNumberOfTaskWithState(position + 1, mState));
-        }
-
-        @Override
-        public int getItemCount() {
-            return TaskRepository.getInstance(getActivity().getApplicationContext(),
-                    OnlineUser.newInstance().getOnlineUser().getUUID()
-            ).getNumberOfStats(mState);
         }
     }
 

@@ -26,6 +26,9 @@ import com.example.recycleviewlist.model.Task;
 import com.example.recycleviewlist.model.repository.taskRepository.TaskRepository;
 
 public class TaskHandleFragment extends DialogFragment {
+    public static final String KEY_STATE_HANDLER = "com.example.recycleviewlist.activitystateForAdd";
+    public static final String KEY_STATE_TASK = "com.example.recycleviewlist.actitaskKey";
+    public static final int DATE_PICKER_REQUEST_CODE = 2;
     private EditText mEditTextName;
     private EditText mEditTextDiscreption;
     private Button mButtonDatePicker;
@@ -37,9 +40,6 @@ public class TaskHandleFragment extends DialogFragment {
     private RadioButton mRadioButtonDone;
     private RadioButton mRadioButtonDoing;
     private RadioButton mRadioButtonTodo;
-    public static final String KEY_STATE_HANDLER = "com.example.recycleviewlist.activitystateForAdd";
-    public static final String KEY_STATE_TASK = "com.example.recycleviewlist.actitaskKey";
-    public static final int DATE_PICKER_REQUEST_CODE = 2;
 
     public static Intent getIntentHandel(StateHandler state, Task task) {
         Intent intent = new Intent();

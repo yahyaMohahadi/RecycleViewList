@@ -9,6 +9,11 @@ import java.util.Date;
 public class TimePickerFragment extends Picker {
     private static Date mDate;
 
+    public static Fragment newInstance(Date date) {
+        mDate = date;
+        return new TimePickerFragment();
+    }
+
     @Override
     void setResult() {
 
@@ -27,10 +32,5 @@ public class TimePickerFragment extends Picker {
     @Override
     int pickerIcon() {
         return R.drawable.ic_time_picker;
-    }
-
-    public  static  Fragment newInstance(Date date) {
-        mDate = date;
-        return new TimePickerFragment();
     }
 }

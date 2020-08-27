@@ -32,12 +32,12 @@ public class Task implements Serializable {
         mDate = new Date();
     }
 
-    public UUID getIDUser() {
-        return mIDUser;
+    public Task() {
+        this(State.DONE, "maktab default");
     }
 
-    public Task() {
-        this(State.DONE,"maktab default");
+    public UUID getIDUser() {
+        return mIDUser;
     }
 
     public State getState() {
@@ -72,17 +72,17 @@ public class Task implements Serializable {
         return mDate;
     }
 
-    public String getDateYMD(){
+    public void setDate(Date date) {
+        mDate = date;
+    }
+
+    public String getDateYMD() {
         String ymd = new SimpleDateFormat("yyyy-MM-dd").format(mDate);
         return ymd;
     }
 
-    public String getTimeHMS(){
+    public String getTimeHMS() {
         String hms = new SimpleDateFormat("hh-mm-ss").format(mDate);
         return hms;
-    }
-
-    public void setDate(Date date) {
-        mDate = date;
     }
 }

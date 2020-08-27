@@ -37,7 +37,7 @@ public abstract class Picker extends DialogFragment {
         initPicker();
         return new AlertDialog.Builder(getActivity())
                 .setIcon(pickerIcon())
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 setResult();
@@ -50,16 +50,16 @@ public abstract class Picker extends DialogFragment {
     }
 
     abstract void setResult();
-        //TODO get date frome date pickeer and save them in repository
+    //TODO get date frome date pickeer and save them in repository
 
     abstract void initPicker();
-        //TODO init whith date
+    //TODO init whith date
 
     abstract int pickerView();
-        //TODO RETURN View picker
+    //TODO RETURN View picker
 
     abstract int pickerIcon();
-        //TODO RETURN icon picker
+    //TODO RETURN icon picker
 
 
     private void findView(View view) {

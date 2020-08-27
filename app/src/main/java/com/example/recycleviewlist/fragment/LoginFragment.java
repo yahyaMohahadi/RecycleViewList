@@ -18,6 +18,10 @@ import com.example.recycleviewlist.activity.MainActivity;
 import com.example.recycleviewlist.model.User;
 import com.example.recycleviewlist.model.repository.userRepository.UserRepository;
 
+enum StateStart {
+    LOGIN, SIGNUP
+}
+
 public class LoginFragment extends Fragment {
 
     private Button mButtonState;
@@ -133,8 +137,4 @@ public class LoginFragment extends Fragment {
             }
         }
     }
-}
-
-enum StateStart {
-    LOGIN, SIGNUP
 }

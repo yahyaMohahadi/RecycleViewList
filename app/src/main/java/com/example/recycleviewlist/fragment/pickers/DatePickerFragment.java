@@ -9,6 +9,11 @@ import java.util.Date;
 public class DatePickerFragment extends Picker {
     private static Date mDate;
 
+    public static Fragment newInstance(Date date) {
+        mDate = date;
+        return new DatePickerFragment();
+    }
+
     @Override
     void setResult() {
 
@@ -27,10 +32,5 @@ public class DatePickerFragment extends Picker {
     @Override
     int pickerIcon() {
         return R.drawable.ic_date_picker;
-    }
-
-    public  static Fragment newInstance(Date date) {
-        mDate = date;
-        return new DatePickerFragment();
     }
 }

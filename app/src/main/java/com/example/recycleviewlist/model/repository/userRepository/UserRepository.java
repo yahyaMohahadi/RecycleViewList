@@ -8,11 +8,25 @@ import android.database.sqlite.SQLiteDatabase;
 import com.example.recycleviewlist.database.UserDBRepository;
 import com.example.recycleviewlist.model.User;
 
+interface UserReposible {
+    //return null if it not exist return a user for online user
+    public User isUserExist(String name, String password);
+
+    public Boolean deleteUser(User user);
+
+    public void addUser(User user);
+
+
+}
+
 public class UserRepository implements UserReposible {
     private static UserRepository mUserRepository;
     private static Context mContext;
 
     private static SQLiteDatabase mDatabase;
+
+    private UserRepository() {
+    }
 
     public static UserRepository getInstance(Context context) {
         mContext = context;
@@ -28,9 +42,6 @@ public class UserRepository implements UserReposible {
             }*/
         }
         return mUserRepository;
-    }
-
-    private UserRepository() {
     }
 
     @Override
@@ -69,12 +80,4 @@ public class UserRepository implements UserReposible {
             return null;
         }
     }
-}
-interface UserReposible{
-    //return null if it not exist return a user for online user
-    public User isUserExist(String name, String password);
-    public Boolean deleteUser(User user);
-    public void addUser(User user);
-
-
 }

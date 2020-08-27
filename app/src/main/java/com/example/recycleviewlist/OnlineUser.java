@@ -5,9 +5,9 @@ import androidx.annotation.NonNull;
 import com.example.recycleviewlist.model.User;
 
 public class OnlineUser {
+    public static User mUserRoot = new User("root", "root");
     private static OnlineUser mOnlineUser;
     private static User onlineUser;
-    public static User mUserRoot = new User("root", "root");
 
     private OnlineUser() {
     }

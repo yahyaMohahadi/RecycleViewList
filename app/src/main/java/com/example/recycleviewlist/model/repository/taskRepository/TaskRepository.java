@@ -14,12 +14,44 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+interface Reposible {
+    /**
+     * CREAT
+     * READ
+     * Upgrade
+     * DELETE
+     */
+
+    void addTask(Task task);
+
+    Task getTask(UUID uuid);
+
+    int getPosition(UUID uuid);
+
+    void setTask(Task task);
+
+    void removeTask(UUID uuid);
+
+    void removeTasks();
+
+    int getNumberOfStats(State state);
+
+    Task gerNumberOfTaskWithState(int number, State state);
+
+    public List<Task> getListTasks();
+
+    // void setDate(LocaleData localeData);
+}
+
 public class TaskRepository implements Reposible {
     private static TaskRepository getInstance;
     private static SQLiteDatabase mDatabase;
     private static Context mContext;
     private static UUID mIDUser;
     private List<Task> mTasks = new ArrayList<>();
+
+    private TaskRepository() {
+    }
 
     public static TaskRepository getInstance(Context context, UUID uuidUser) {
         mContext = context;
@@ -30,9 +62,6 @@ public class TaskRepository implements Reposible {
             getInstance.getTasks();
         }
         return getInstance;
-    }
-
-    private TaskRepository() {
     }
 
     @Override
@@ -75,7 +104,7 @@ public class TaskRepository implements Reposible {
 //        Log.d("QQQ",OnlineUser.newInstance().getOnlineUser().getUUID().toString());
 //        Log.d("QQQ",cursor.getCount()+"whre curcer");
         cursor.moveToFirst();
-        if (cursor.getCount()!=0) {
+        if (cursor.getCount() != 0) {
             while (!cursor.isAfterLast()) {
                 Task task = getTaskFromCursor(cursor);
                 tasks.add(task);
@@ -171,33 +200,4 @@ public class TaskRepository implements Reposible {
         return null;
     }
 
-}
-
-interface Reposible {
-    /**
-     * CREAT
-     * READ
-     * Upgrade
-     * DELETE
-     */
-
-    void addTask(Task task);
-
-    Task getTask(UUID uuid);
-
-    int getPosition(UUID uuid);
-
-    void setTask(Task task);
-
-    void removeTask(UUID uuid);
-
-    void removeTasks();
-
-    int getNumberOfStats(State state);
-
-    Task gerNumberOfTaskWithState(int number, State state);
-
-    public List<Task> getListTasks();
-
-    // void setDate(LocaleData localeData);
 }

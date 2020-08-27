@@ -10,6 +10,16 @@ public class User implements Serializable {
     String mStringPassword;
     UUID mUUID;
 
+    public User(@NonNull String stringName, @NonNull String stringUserName) {
+        this(stringName, stringUserName, UUID.randomUUID().toString());
+    }
+
+    public User(@NonNull String stringName, @NonNull String stringUserName, @NonNull String uuid) {
+        mStringName = stringName;
+        mStringPassword = stringUserName;
+        mUUID = UUID.fromString(uuid);
+    }
+
     public String getStringName() {
         return mStringName;
     }
@@ -28,16 +38,6 @@ public class User implements Serializable {
 
     public UUID getUUID() {
         return mUUID;
-    }
-
-    public User(@NonNull String stringName, @NonNull String stringUserName) {
-        this(stringName, stringUserName, UUID.randomUUID().toString());
-    }
-
-    public User(@NonNull String stringName, @NonNull String stringUserName, @NonNull String uuid) {
-        mStringName = stringName;
-        mStringPassword = stringUserName;
-        mUUID = UUID.fromString(uuid);
     }
 
     @Override

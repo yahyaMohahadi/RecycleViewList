@@ -20,14 +20,21 @@ import com.example.recycleviewlist.model.repository.userRepository.UserRepositor
 
 import java.io.Serializable;
 
+enum StateOrder implements Serializable {
+    DELETE_TASK, DELETE_ACOUNT
+}
+
 public class AlertDialog extends DialogFragment {
 
     private static final String sKeyTextAlert = "com.example.recycleviewlist.fragmentALERTDIALOGSTRING";
     private static final String sKeyContex = "com.example.recycleviewlist.fragmentCONTEX";
     private static final String sKeyOrder = "com.example.recycleviewlist.order";
+    private static Context mContext;
     private String mStringTextAlert;
     private StateOrder mOrder;
-    private static Context mContext;
+
+    private AlertDialog() {
+    }
 
     public static AlertDialog newInstance(Context context, StateOrder order, String text) {
         Bundle args = new Bundle();
@@ -37,9 +44,6 @@ public class AlertDialog extends DialogFragment {
         mContext = context;
         alertDialog.setArguments(args);
         return alertDialog;
-    }
-
-    private AlertDialog() {
     }
 
     private void getArgument() {
@@ -71,7 +75,7 @@ public class AlertDialog extends DialogFragment {
     private void doOrder() {
         switch (mOrder) {
             case DELETE_TASK: {
-                getTargetFragment().onActivityResult(0, Activity.RESULT_OK,new Intent());
+                getTargetFragment().onActivityResult(0, Activity.RESULT_OK, new Intent());
                 TaskRepository.getInstance(getActivity().getApplicationContext(),
                         OnlineUser.newInstance().getOnlineUser().getUUID()).removeTasks();
                 break;
@@ -84,8 +88,4 @@ public class AlertDialog extends DialogFragment {
         }
     }
 
-}
-
-enum StateOrder implements Serializable {
-    DELETE_TASK, DELETE_ACOUNT
 }
