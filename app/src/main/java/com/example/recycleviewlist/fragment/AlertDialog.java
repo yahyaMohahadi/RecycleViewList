@@ -75,7 +75,7 @@ public class AlertDialog extends DialogFragment {
     private void doOrder() {
         switch (mOrder) {
             case DELETE_TASK: {
-                getTargetFragment().onActivityResult(0, Activity.RESULT_OK, new Intent());
+                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, new Intent());
                 TaskRepository.getInstance(getActivity().getApplicationContext(),
                         OnlineUser.newInstance().getOnlineUser().getUUID()).removeTasks();
                 break;

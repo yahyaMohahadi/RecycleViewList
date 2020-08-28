@@ -7,19 +7,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.recycleviewlist.R;
-
-import java.util.Date;
-
 public abstract class Picker extends DialogFragment {
-    private android.widget.DatePicker mDatePicker;
-    private Date mDateCurentDate;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,9 +26,7 @@ public abstract class Picker extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.picker_dialog_alert_fragment, null);
 
-        initPicker();
         return new AlertDialog.Builder(getActivity())
                 .setIcon(pickerIcon())
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -53,6 +46,13 @@ public abstract class Picker extends DialogFragment {
 
     abstract void initPicker();
     //TODO init whith date
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        initPicker();
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
 
     abstract View pickerView();
     //TODO RETURN View picker

@@ -59,7 +59,7 @@ public class TaskRepository implements Reposible {
         if (getInstance == null) {
             getInstance = new TaskRepository();
             mDatabase = new TaskDBReposytory(context).getWritableDatabase();
-            getInstance.getTasks();
+            getInstance.updateListTask();
         }
         return getInstance;
     }
@@ -87,7 +87,7 @@ public class TaskRepository implements Reposible {
     }
 
 
-    private void getTasks() {
+    private void updateListTask() {
         List<Task> tasks = new ArrayList<>();
         Cursor cursor;
         if (!OnlineUser.newInstance().getOnlineUser().equals(OnlineUser.mUserRoot)) {
@@ -131,13 +131,9 @@ public class TaskRepository implements Reposible {
     @Override
     public List<Task> getListTasks() {
         if (mTasks == null) {
-            getTasks();
+            updateListTask();
         }
         return mTasks;
-    }
-
-    private void updateListTask() {
-        getTasks();
     }
 
     @Override

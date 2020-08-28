@@ -33,7 +33,7 @@ import java.util.List;
 public class MainFragment extends Fragment {
 
     public static final int REQUEST_COD_ADD = 0;
-    private static final int REQUEST_COD_ALERT = 3;
+    public static final int REQUEST_COD_ALERT = 3;
     ViewPager2 mViewPagerTask;
     List<State> mStates = new ArrayList<>(Arrays.asList(State.TODO, State.DOING, State.DONE));
     TextView mTextViewDone;
@@ -98,7 +98,7 @@ public class MainFragment extends Fragment {
                 AlertDialog alertDialog = AlertDialog.newInstance(getActivity(),
                         StateOrder.DELETE_TASK,
                         "Are you sure to clear all of your tasks?");
-                setTargetFragment(mFragments[mIntCurrent], REQUEST_COD_ALERT);
+                alertDialog.setTargetFragment(mFragments[mIntCurrent], REQUEST_COD_ALERT);
                 alertDialog.show(getActivity().getSupportFragmentManager(), "ttt");
                 return true;
             }
@@ -136,8 +136,7 @@ public class MainFragment extends Fragment {
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = TaskHandleFragment.getIntentHandel(StateHandler.NEW, new Task(mStates.get(mIntCurrent), ""));
-                DialogFragment fragmentAdd = TaskHandleFragment.newInstance(intent);
+                DialogFragment fragmentAdd = TaskHandleDialog.newInstance(StateHandler.NEW, new Task(mStates.get(mIntCurrent), ""));
                 fragmentAdd.setTargetFragment(mFragments[mIntCurrent], REQUEST_COD_ADD);
                 fragmentAdd.show(getActivity().getSupportFragmentManager(), "TAG");
             }

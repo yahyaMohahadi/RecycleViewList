@@ -9,10 +9,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -25,15 +25,13 @@ import com.example.recycleviewlist.model.StateHandler;
 import com.example.recycleviewlist.model.Task;
 import com.example.recycleviewlist.model.repository.taskRepository.TaskRepository;
 
-public class TaskHandleFragment extends DialogFragment {
+public class TaskHandleDialog extends DialogFragment {
     public static final String KEY_STATE_HANDLER = "com.example.recycleviewlist.activitystateForAdd";
     public static final String KEY_STATE_TASK = "com.example.recycleviewlist.actitaskKey";
-    public static final int DATE_PICKER_REQUEST_CODE = 2;
     private EditText mEditTextName;
     private EditText mEditTextDiscreption;
-    private Button mButtonDatePicker;
-    private Button mButtonTimePicker;
     private Task mTask;
+    private TextView mTextViewTimeShow;
     private State mState = State.DONE;
     private StateHandler mStateHandler;
     private RadioGroup mRadioGroupStete;
@@ -41,18 +39,14 @@ public class TaskHandleFragment extends DialogFragment {
     private RadioButton mRadioButtonDoing;
     private RadioButton mRadioButtonTodo;
 
-    public static Intent getIntentHandel(StateHandler state, Task task) {
+    public static TaskHandleDialog newInstance(StateHandler state, Task task) {
         Intent intent = new Intent();
         intent.putExtra(KEY_STATE_HANDLER, state);
         intent.putExtra(KEY_STATE_TASK, task);
-        return intent;
-    }
-
-    public static TaskHandleFragment newInstance(Intent intent) {
         Bundle args = new Bundle();
-        args.putSerializable(KEY_STATE_HANDLER, intent.getSerializableExtra(KEY_STATE_HANDLER));
-        args.putSerializable(KEY_STATE_TASK, intent.getSerializableExtra(KEY_STATE_TASK));
-        TaskHandleFragment fragment = new TaskHandleFragment();
+        args.putSerializable(KEY_STATE_HANDLER, state);
+        args.putSerializable(KEY_STATE_TASK, task);
+        TaskHandleDialog fragment = new TaskHandleDialog();
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,10 +56,8 @@ public class TaskHandleFragment extends DialogFragment {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View view = inflater.inflate(R.layout.handler_dialog_fragment, null);
         findView(view);
-        setOnClick();
         setArguments();
         initViews();
-
         return new AlertDialog.Builder(getActivity())
                 .setTitle(mStateHandler == StateHandler.NEW ?
                         "new Task " + mState.toString() :
@@ -90,6 +82,12 @@ public class TaskHandleFragment extends DialogFragment {
                 .create();
     }
 
+    private void setArguments() {
+        mTask = (Task) getArguments().getSerializable(KEY_STATE_TASK);
+        mState = mTask.getState();
+        mStateHandler = (StateHandler) getArguments().getSerializable(KEY_STATE_HANDLER);
+    }
+
     private void deleteTask() {
         TaskRepository.getInstance(getActivity().getApplicationContext(),
                 OnlineUser.newInstance().getOnlineUser().getUUID()).removeTask(mTask.getUUID());
@@ -97,36 +95,14 @@ public class TaskHandleFragment extends DialogFragment {
 
     private void initViews() {
         setStateRadioGroup(mTask.getState());
+        mTextViewTimeShow.setText(mTask.getDate().toString());
         if (mStateHandler == StateHandler.NEW) {
-            mButtonDatePicker.setText(mTask.getDateYMD());
-            mButtonTimePicker.setText(mTask.getTimeHMS());
         } else {
             mEditTextDiscreption.setText(mTask.getStringDescription());
             mEditTextName.setText(mTask.getStringTitle());
         }
     }
 
-    private void setOnClick() {
-        mButtonDatePicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO FIND fRAGMENT
-                //DatePickerFragment datePickerFragment = (DatePickerFragment) DatePickerFragment.newInstance(mTask.getDate());
-
-                //datePickerFragment.setTargetFragment(MainActivity.getCurentFragment(), DATE_PICKER_REQUEST_CODE);
-
-                //getDialog().dismiss();
-                //FragmentManager fragmentManager = getParentFragment().getFragmentManager();
-                //datePickerFragment.show(MainActivity.getFragmentManagere(), "DIALOG_FRAGMENT_TAG");
-            }
-        });
-        mButtonTimePicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO FIND fRAGMENT
-            }
-        });
-    }
 
     private void okClick() {
         mTask.setStringTitle(mEditTextName.getText().toString());
@@ -136,7 +112,7 @@ public class TaskHandleFragment extends DialogFragment {
         if (mStateHandler == StateHandler.NEW) {
             TaskRepository.getInstance(getActivity().getApplicationContext(),
                     OnlineUser.newInstance().getOnlineUser().getUUID()).addTask(mTask);
-        } else {
+        } else if (mStateHandler == StateHandler.EDIT) {
             TaskRepository.getInstance(getActivity().getApplicationContext(),
                     OnlineUser.newInstance().getOnlineUser().getUUID()).setTask(mTask);
         }
@@ -151,8 +127,7 @@ public class TaskHandleFragment extends DialogFragment {
 
     private void findView(View view) {
         mEditTextName = view.findViewById(R.id.editText_name);
-        mButtonDatePicker = view.findViewById(R.id.button_date);
-        mButtonTimePicker = view.findViewById(R.id.button_time);
+        mTextViewTimeShow = view.findViewById(R.id.textView_time);
         mRadioGroupStete = view.findViewById(R.id.RadioGroup_state);
         mEditTextDiscreption = view.findViewById(R.id.editText_discription);
         mRadioButtonDone = view.findViewById(R.id.radioButton_done);
@@ -161,11 +136,7 @@ public class TaskHandleFragment extends DialogFragment {
 
     }
 
-    private void setArguments() {
-        mTask = (Task) getArguments().getSerializable(KEY_STATE_TASK);
-        mState = mTask.getState();
-        mStateHandler = (StateHandler) getArguments().getSerializable(KEY_STATE_HANDLER);
-    }
+
 
     private State getSatateRadioGroup() {
         switch (mRadioGroupStete.getCheckedRadioButtonId()) {
@@ -203,6 +174,6 @@ public class TaskHandleFragment extends DialogFragment {
 
     private void setResult(int result) {
         Fragment fragment = getTargetFragment();
-        fragment.onActivityResult(0, result, new Intent());
+        fragment.onActivityResult(getTargetRequestCode(), result, new Intent());
     }
 }

@@ -1,6 +1,5 @@
 package com.example.recycleviewlist.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -108,13 +107,13 @@ public class WorkListFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         checkTasksInDataBase();
-        if (resultCode != Activity.RESULT_OK || data == null) {
+      /*  if (resultCode != Activity.RESULT_OK || data == null) {
             return;
-        } else if (requestCode == REQUEST_CODE_DATEPICKER) {
-
-        } else if (requestCode == REQUEST_CODE_TIME_PICKER) {
-
         }
+        if (requestCode == MainFragment.REQUEST_COD_ALERT) {
+            // mAdapterTask.notifyAll();
+        }*/
+
     }
 
     private class AdapterTask extends RecyclerView.Adapter {
@@ -155,8 +154,7 @@ public class WorkListFragment extends Fragment {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = TaskHandleFragment.getIntentHandel(StateHandler.EDIT, mTask);
-                        DialogFragment fragmentAdd = TaskHandleFragment.newInstance(intent);
+                        DialogFragment fragmentAdd = TaskHandleDialog.newInstance(StateHandler.EDIT, mTask);
                         fragmentAdd.setTargetFragment(WorkListFragment.this, REQUEST_COD_EDIT);
                         fragmentAdd.show(getActivity().getSupportFragmentManager(), "TAG");
                     }

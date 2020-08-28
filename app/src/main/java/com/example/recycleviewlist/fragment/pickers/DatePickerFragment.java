@@ -1,48 +1,67 @@
 package com.example.recycleviewlist.fragment.pickers;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.DatePicker;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.recycleviewlist.OnlineUser;
 import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.model.Task;
+import com.example.recycleviewlist.model.repository.taskRepository.TaskRepository;
 
-import java.util.Date;
+import java.util.Calendar;
 
 public class DatePickerFragment extends Picker {
-    private static Date mDate;
     private static Task sTask;
+    private View mViewDatePicker;
+    private DatePicker mDatePicker;
 
     public static Fragment newInstance(Task task) {
-        mDate = task.getDate();
-        sTask =task;
+        sTask = task;
         return new DatePickerFragment();
     }
 
     @Override
     void setResult() {
-        getTargetFragment().onActivityResult(getTargetRequestCode(),
-                Activity.RESULT_OK,
-                new Intent().putExtra("data",mDate)
-        );
+        Calendar calender = Calendar.getInstance();
+        calender.setTime(sTask.getDate());
+        calender.set(mDatePicker.getYear(), mDatePicker.getMonth(), mDatePicker.getDayOfMonth());
+        sTask.setDate(calender.getTime());
+        TaskRepository.getInstance(getActivity(), OnlineUser.newInstance().getOnlineUser().getUUID()).
+                setTask(sTask);
     }
 
     @Override
     void initPicker() {
+        Calendar calender = Calendar.getInstance();
+        calender.setTime(sTask.getDate());
+        mDatePicker.init(
+                        calender.get(Calendar.YEAR),
+                        calender.get(Calendar.MONTH),
+                        calender.get(Calendar.DAY_OF_MONTH),
+                        null);
 
+//                new DatePicker.OnDateChangedListener(){
+//                    @Override
+//                    public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
+//
+//                    }
+//                }
     }
 
     @Override
     View pickerView() {
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.date_picker,null);
-        return view;
+        mViewDatePicker = LayoutInflater.from(getActivity()).inflate(R.layout.date_picker, null);
+        mDatePicker = mViewDatePicker.findViewById(R.id.date_picker);
+        return mViewDatePicker;
     }
 
     @Override
     int pickerIcon() {
         return R.drawable.ic_date_picker;
     }
+
+
 }
