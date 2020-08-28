@@ -6,7 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.recycleviewlist.fragment.LoginFragment;
-import com.example.recycleviewlist.model.repository.userRepository.UserRepository;
+import com.example.recycleviewlist.database.user.UserRepository;
 
 public class LoginActivity extends SingleFragmentActivity {
     @Override

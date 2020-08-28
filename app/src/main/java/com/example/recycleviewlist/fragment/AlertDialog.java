@@ -1,10 +1,8 @@
 package com.example.recycleviewlist.fragment;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,14 +13,12 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.recycleviewlist.OnlineUser;
 import com.example.recycleviewlist.R;
-import com.example.recycleviewlist.model.repository.taskRepository.TaskRepository;
-import com.example.recycleviewlist.model.repository.userRepository.UserRepository;
+import com.example.recycleviewlist.database.task.TaskRepository;
+import com.example.recycleviewlist.database.user.UserRepository;
 
 import java.io.Serializable;
 
-enum StateOrder implements Serializable {
-    DELETE_TASK, DELETE_ACOUNT
-}
+
 
 public class AlertDialog extends DialogFragment {
 
@@ -75,9 +71,12 @@ public class AlertDialog extends DialogFragment {
     private void doOrder() {
         switch (mOrder) {
             case DELETE_TASK: {
-                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, new Intent());
-                TaskRepository.getInstance(getActivity().getApplicationContext(),
-                        OnlineUser.newInstance().getOnlineUser().getUUID()).removeTasks();
+                if (OnlineUser.newInstance().getRoot()){
+                    TaskRepository.getInstance(getActivity())
+                            .removeTasksAllUsers();
+                }
+                TaskRepository.getInstance(getActivity())
+                .removeTasksOnlineUser();
                 break;
             }
             case DELETE_ACOUNT: {
@@ -88,4 +87,7 @@ public class AlertDialog extends DialogFragment {
         }
     }
 
+}
+enum StateOrder implements Serializable {
+    DELETE_TASK, DELETE_ACOUNT
 }

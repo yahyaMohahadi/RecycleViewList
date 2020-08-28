@@ -16,7 +16,7 @@ import com.example.recycleviewlist.OnlineUser;
 import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.activity.MainActivity;
 import com.example.recycleviewlist.model.User;
-import com.example.recycleviewlist.model.repository.userRepository.UserRepository;
+import com.example.recycleviewlist.database.user.UserRepository;
 
 enum StateStart {
     LOGIN, SIGNUP

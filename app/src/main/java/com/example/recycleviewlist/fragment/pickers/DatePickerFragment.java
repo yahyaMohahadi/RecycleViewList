@@ -6,10 +6,9 @@ import android.widget.DatePicker;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.recycleviewlist.OnlineUser;
 import com.example.recycleviewlist.R;
+import com.example.recycleviewlist.database.task.TaskRepository;
 import com.example.recycleviewlist.model.Task;
-import com.example.recycleviewlist.model.repository.taskRepository.TaskRepository;
 
 import java.util.Calendar;
 
@@ -29,7 +28,7 @@ public class DatePickerFragment extends Picker {
         calender.setTime(sTask.getDate());
         calender.set(mDatePicker.getYear(), mDatePicker.getMonth(), mDatePicker.getDayOfMonth());
         sTask.setDate(calender.getTime());
-        TaskRepository.getInstance(getActivity(), OnlineUser.newInstance().getOnlineUser().getUUID()).
+        TaskRepository.getInstance(getActivity()).
                 setTask(sTask);
     }
 

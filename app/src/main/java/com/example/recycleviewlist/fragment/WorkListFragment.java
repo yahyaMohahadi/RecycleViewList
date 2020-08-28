@@ -7,25 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.recycleviewlist.OnlineUser;
 import com.example.recycleviewlist.R;
-import com.example.recycleviewlist.fragment.pickers.DatePickerFragment;
-import com.example.recycleviewlist.fragment.pickers.Picker;
-import com.example.recycleviewlist.fragment.pickers.TimePickerFragment;
+import com.example.recycleviewlist.database.task.TaskRepository;
 import com.example.recycleviewlist.model.State;
-import com.example.recycleviewlist.model.StateHandler;
-import com.example.recycleviewlist.model.Task;
-import com.example.recycleviewlist.model.repository.taskRepository.TaskRepository;
 
 import static com.example.recycleviewlist.R.id;
 import static com.example.recycleviewlist.R.layout;
@@ -34,12 +24,9 @@ import static com.example.recycleviewlist.R.layout;
 public class WorkListFragment extends Fragment {
 
     public final static String stateKey = "com.example.recycleviewlist.fragment.stateKey";
-    public static final int REQUEST_COD_EDIT = 1;
-    public static final int REQUEST_CODE_DATEPICKER = 3;
-    public static final int REQUEST_CODE_TIME_PICKER = 4;
     private ImageView mImageViewEmptyTask;
     private RecyclerView mRecyclerView;
-    private AdapterTask mAdapterTask;
+    private WorkListAdapter mAdapterTask;
     private State mState;
 
     public static Intent newIntent(Context context, State state) {
@@ -77,8 +64,7 @@ public class WorkListFragment extends Fragment {
 
     public void checkTasksInDataBase() {
         if (TaskRepository.getInstance(
-                getActivity(),
-                OnlineUser.newInstance().getOnlineUser().getUUID()).getNumberOfStats(mState) == 0) {
+                getActivity()).getListTasks(mState).size() == 0) {
             if (mRecyclerView != null) {
                 mRecyclerView.setVisibility(View.GONE);
             }
@@ -99,7 +85,11 @@ public class WorkListFragment extends Fragment {
     }
 
     public void addAdapter() {
-        mAdapterTask = new AdapterTask();
+        mAdapterTask = WorkListAdapter.newInstance(
+                getActivity().getApplicationContext(),
+                this,
+                mState
+        );
         mRecyclerView.setAdapter(mAdapterTask);
     }
 
@@ -107,102 +97,6 @@ public class WorkListFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         checkTasksInDataBase();
-      /*  if (resultCode != Activity.RESULT_OK || data == null) {
-            return;
-        }
-        if (requestCode == MainFragment.REQUEST_COD_ALERT) {
-            // mAdapterTask.notifyAll();
-        }*/
-
+        mAdapterTask.notifyDataSetChanged();
     }
-
-    private class AdapterTask extends RecyclerView.Adapter {
-
-        @NonNull
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View view = inflater.inflate(layout.list, parent, false);
-            return new HolderTask(view);
-
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            ((HolderTask) holder).bind(TaskRepository.getInstance(
-                    getActivity().getApplicationContext(),
-                    OnlineUser.newInstance().getOnlineUser().getUUID())
-                    .gerNumberOfTaskWithState(position + 1, mState));
-        }
-
-        @Override
-        public int getItemCount() {
-            return TaskRepository.getInstance(getActivity().getApplicationContext(),
-                    OnlineUser.newInstance().getOnlineUser().getUUID()
-            ).getNumberOfStats(mState);
-        }
-
-        private class HolderTask extends RecyclerView.ViewHolder {
-            TextView mTextViewName;
-            ConstraintLayout mConstraintLayout;
-            private Task mTask;
-
-            public HolderTask(@NonNull View itemView) {
-                super(itemView);
-                mTextViewName = itemView.findViewById(id.textView_name);
-                mConstraintLayout = itemView.findViewById(id.constrain_list);
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        DialogFragment fragmentAdd = TaskHandleDialog.newInstance(StateHandler.EDIT, mTask);
-                        fragmentAdd.setTargetFragment(WorkListFragment.this, REQUEST_COD_EDIT);
-                        fragmentAdd.show(getActivity().getSupportFragmentManager(), "TAG");
-                    }
-                });
-                itemView.findViewById(id.imageView_time).setOnClickListener(
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Picker time = (Picker) TimePickerFragment.newInstance(mTask);
-                                time.setTargetFragment(WorkListFragment.this, REQUEST_CODE_TIME_PICKER);
-                                time.show(getFragmentManager(), "tag");
-                            }
-                        }
-                );
-                itemView.findViewById(id.imageView_calandar).setOnClickListener(
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Picker calander = (Picker) DatePickerFragment.newInstance(mTask);
-                                calander.setTargetFragment(WorkListFragment.this, REQUEST_CODE_DATEPICKER);
-                                calander.show(getFragmentManager(), "tag");
-                            }
-                        }
-                );
-            }
-
-            public void bind(Task task) {
-                mTask = task;
-                if (task != null) {
-                    mTextViewName.setText(task.getStringTitle());
-                }
-               /* switch (mTask.getState()) {
-                    case DOING: {
-                        mImageViewState.setImageResource(R.drawable.ic_doing);
-                        break;
-                    }
-                    case TODO: {
-                        mImageViewState.setImageResource(R.drawable.ic_todo);
-                        break;
-                    }
-                    case DONE: {
-                        mImageViewState.setImageResource(R.drawable.ic_done);
-                        break;
-                    }
-                }*/
-            }
-        }
-    }
-
-
 }

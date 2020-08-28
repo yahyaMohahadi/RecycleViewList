@@ -1,5 +1,8 @@
 package com.example.recycleviewlist.model;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+
 import com.example.recycleviewlist.OnlineUser;
 
 import java.io.Serializable;
@@ -7,13 +10,35 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
+
+@Entity(tableName = Task.COLS.TABLE_NAME)
 public class Task implements Serializable {
+
+    @ColumnInfo(name = COLS.CUL_UUID)
     private UUID mUUID;
+
+    @ColumnInfo(name = COLS.CUL_UUID_USER)
     private UUID mIDUser;
+
+    @ColumnInfo(name = COLS.CUL_STATE)
     private State mState;
+
+    @ColumnInfo(name = COLS.CUL_TITLE)
     private String mStringTitle;
+
+    @ColumnInfo(name = COLS.CUL_DESCRIPTION)
     private String mStringDescription;
+
+    @ColumnInfo(name = COLS.CUL_DATE)
     private Date mDate;
+
+    public void setUUID(UUID UUID) {
+        mUUID = UUID;
+    }
+
+    public void setIDUser(UUID IDUser) {
+        mIDUser = IDUser;
+    }
 
     public Task(State state, String stringTitle) {
         mUUID = UUID.randomUUID();
@@ -84,5 +109,18 @@ public class Task implements Serializable {
     public String getTimeHMS() {
         String hms = new SimpleDateFormat("hh-mm-ss").format(mDate);
         return hms;
+    }
+
+    public static class COLS {
+        public static final int VERSION_DB_USER = 1;
+        public static final String NAME_DB_FILE = "tasks.db";
+        public static final String TABLE_NAME = "tasks";
+        public static final String CUL_ID = "ID";
+        public static final String CUL_STATE = "state";
+        public static final String CUL_TITLE = "title";
+        public static final String CUL_DESCRIPTION = "description";
+        public static final String CUL_DATE = "date";
+        public static final String CUL_UUID = "uuid";
+        public static final String CUL_UUID_USER = "uuidUser";
     }
 }

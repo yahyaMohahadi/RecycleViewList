@@ -18,12 +18,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import com.example.recycleviewlist.OnlineUser;
 import com.example.recycleviewlist.R;
+import com.example.recycleviewlist.database.task.TaskRepository;
 import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.model.StateHandler;
 import com.example.recycleviewlist.model.Task;
-import com.example.recycleviewlist.model.repository.taskRepository.TaskRepository;
 
 public class TaskHandleDialog extends DialogFragment {
     public static final String KEY_STATE_HANDLER = "com.example.recycleviewlist.activitystateForAdd";
@@ -89,8 +88,7 @@ public class TaskHandleDialog extends DialogFragment {
     }
 
     private void deleteTask() {
-        TaskRepository.getInstance(getActivity().getApplicationContext(),
-                OnlineUser.newInstance().getOnlineUser().getUUID()).removeTask(mTask.getUUID());
+        TaskRepository.getInstance(getActivity()).removeTask(mTask);
     }
 
     private void initViews() {
@@ -110,11 +108,9 @@ public class TaskHandleDialog extends DialogFragment {
         mTask.setStringDescription(mEditTextDiscreption.getText().toString());
         mTask.setState(getSatateRadioGroup());
         if (mStateHandler == StateHandler.NEW) {
-            TaskRepository.getInstance(getActivity().getApplicationContext(),
-                    OnlineUser.newInstance().getOnlineUser().getUUID()).addTask(mTask);
+            TaskRepository.getInstance(getActivity()).addTask(mTask);
         } else if (mStateHandler == StateHandler.EDIT) {
-            TaskRepository.getInstance(getActivity().getApplicationContext(),
-                    OnlineUser.newInstance().getOnlineUser().getUUID()).setTask(mTask);
+            TaskRepository.getInstance(getActivity()).setTask(mTask);
         }
     }
 
@@ -135,7 +131,6 @@ public class TaskHandleDialog extends DialogFragment {
         mRadioButtonTodo = view.findViewById(R.id.radioButton_todo);
 
     }
-
 
 
     private State getSatateRadioGroup() {
