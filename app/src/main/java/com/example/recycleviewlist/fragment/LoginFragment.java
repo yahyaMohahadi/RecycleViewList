@@ -15,8 +15,8 @@ import androidx.fragment.app.Fragment;
 import com.example.recycleviewlist.OnlineUser;
 import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.activity.MainActivity;
-import com.example.recycleviewlist.model.User;
 import com.example.recycleviewlist.database.user.UserRepository;
+import com.example.recycleviewlist.model.User;
 
 enum StateStart {
     LOGIN, SIGNUP
@@ -99,8 +99,12 @@ public class LoginFragment extends Fragment {
         if (mEditTextUserNameSignUp.getText().toString().equals("") || mEditTextUserPasswordSignUp.getText().toString().equals("")) {
             Toast.makeText(getActivity(), "Fill in all the blanks", Toast.LENGTH_SHORT).show();
         } else {
-            User user = new User(mEditTextUserNameSignUp.getText().toString(),
-                    mEditTextUserPasswordSignUp.getText().toString());
+            User user =
+                    new User.Builder()
+                            .setName(mEditTextUserNameSignUp.getText().toString())
+                            .setPassword(mEditTextUserPasswordSignUp.getText().toString())
+                            .creat();
+
             UserRepository.getInstance(getActivity().getApplicationContext()).addUser(user);
             OnlineUser.newInstance().setOnlineUser(user);
             startActivity(new Intent(LoginFragment.this.getActivity(), MainActivity.class));

@@ -136,7 +136,12 @@ public class MainFragment extends Fragment {
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment fragmentAdd = TaskHandleDialog.newInstance(StateHandler.NEW, new Task(mStates.get(mIntCurrent), ""));
+                DialogFragment fragmentAdd = TaskHandleDialog.newInstance(StateHandler.NEW,
+                        new Task.Bulder()
+                                .setTitle("")
+                                .setState(mStates.get(mIntCurrent))
+                                .creat()
+                );
                 fragmentAdd.setTargetFragment(mFragments[mIntCurrent], REQUEST_COD_ADD);
                 fragmentAdd.show(getActivity().getSupportFragmentManager(), "TAG");
             }

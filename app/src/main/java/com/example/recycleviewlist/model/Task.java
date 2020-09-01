@@ -2,17 +2,20 @@ package com.example.recycleviewlist.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import com.example.recycleviewlist.OnlineUser;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
 
 @Entity(tableName = Task.COLS.TABLE_NAME)
 public class Task implements Serializable {
+
+    @PrimaryKey(autoGenerate = true)
+    private Long id;
 
     @ColumnInfo(name = COLS.CUL_UUID)
     private UUID mUUID;
@@ -32,33 +35,20 @@ public class Task implements Serializable {
     @ColumnInfo(name = COLS.CUL_DATE)
     private Date mDate;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void setUUID(UUID UUID) {
         mUUID = UUID;
     }
 
     public void setIDUser(UUID IDUser) {
         mIDUser = IDUser;
-    }
-
-    public Task(State state, String stringTitle) {
-        mUUID = UUID.randomUUID();
-        mState = state;
-        mStringTitle = stringTitle;
-        mDate = new Date();
-        mIDUser = OnlineUser.newInstance().getOnlineUser().getUUID();
-    }
-
-    public Task(UUID UUID, UUID IDUser, State state, String stringTitle, String stringDescription) {
-        mUUID = UUID;
-        mIDUser = IDUser;
-        mState = state;
-        mStringTitle = stringTitle;
-        mStringDescription = stringDescription;
-        mDate = new Date();
-    }
-
-    public Task() {
-        this(State.DONE, "maktab default");
     }
 
     public UUID getIDUser() {
@@ -93,22 +83,69 @@ public class Task implements Serializable {
         mStringDescription = stringDescription;
     }
 
+    public Task() {
+    }
+
+    public static class Bulder {
+        private UUID mUUID = UUID.randomUUID();
+        private UUID mIDUser = OnlineUser.newInstance().getOnlineUser().getUUID();
+        private State mState = State.DONE;
+        private String mStringTitle;
+        private String mStringDescription;
+        private Date mDate = new Date();
+
+        public Bulder() {
+        }
+
+        public Bulder setUUID(UUID uuid) {
+            this.mUUID = uuid;
+            return this;
+        }
+
+        public Bulder setUUIDUser(UUID uuid) {
+            this.mIDUser = uuid;
+            return this;
+        }
+
+        public Bulder setState(State state) {
+            this.mState = state;
+            return this;
+        }
+
+        public Bulder setTitle(String title) {
+            this.mStringTitle = title;
+            return this;
+        }
+
+        public Bulder setDescription(String description) {
+            this.mStringDescription = description;
+            return this;
+        }
+
+        public Bulder setDate(Date date) {
+            this.mDate = date;
+            return this;
+        }
+
+        public Task creat() {
+            Task task = new Task();
+            task.mIDUser = this.mIDUser;
+            task.mUUID = this.mUUID;
+            task.mState = this.mState;
+            task.mStringTitle = this.mStringTitle;
+            task.mStringDescription = this.mStringDescription;
+            task.mDate = this.mDate;
+            return task;
+        }
+    }
+
+
     public Date getDate() {
         return mDate;
     }
 
     public void setDate(Date date) {
         mDate = date;
-    }
-
-    public String getDateYMD() {
-        String ymd = new SimpleDateFormat("yyyy-MM-dd").format(mDate);
-        return ymd;
-    }
-
-    public String getTimeHMS() {
-        String hms = new SimpleDateFormat("hh-mm-ss").format(mDate);
-        return hms;
     }
 
     public static class COLS {
@@ -122,5 +159,16 @@ public class Task implements Serializable {
         public static final String CUL_DATE = "date";
         public static final String CUL_UUID = "uuid";
         public static final String CUL_UUID_USER = "uuidUser";
+    }
+
+    //for room
+    public Task(Long id, UUID mUUID, UUID mIDUser, State mState, String mStringTitle, String mStringDescription, Date mDate) {
+        this.id = id;
+        this.mUUID = mUUID;
+        this.mIDUser = mIDUser;
+        this.mState = mState;
+        this.mStringTitle = mStringTitle;
+        this.mStringDescription = mStringDescription;
+        this.mDate = mDate;
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -60,6 +61,10 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.Holder
         private ImageView mImageViewTime;
         private ImageView mImageViewCalender;
 
+        private ImageButton mImageButtonShare;
+        private ImageButton mImageButtonFlder;
+        private ImageButton mImageButtonCamera;
+
         public Holder(@NonNull View itemView) {
             super(itemView);
             findView(itemView);
@@ -71,6 +76,9 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.Holder
             mConstraintLayout = itemView.findViewById(R.id.constrain_list);
             mImageViewTime = itemView.findViewById(R.id.imageView_time);
             mImageViewCalender = itemView.findViewById(R.id.imageView_calandar);
+            mImageButtonShare = itemView.findViewById(R.id.button_share);
+            mImageButtonFlder= itemView.findViewById(R.id.button_folder);
+            mImageButtonCamera= itemView.findViewById(R.id.button_camera);
         }
 
         private void setOnCklick(View itemView) {
@@ -104,6 +112,30 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.Holder
                             );
                             calander.setTargetFragment(mFragment, REQUEST_CODE_DATEPICKER);
                             calander.show(mFragment.getFragmentManager(), "tag");
+                        }
+                    }
+            );
+            mImageButtonShare.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //todo make manage
+                        }
+                    }
+            );
+            mImageButtonFlder.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //todo make manage
+                        }
+                    }
+            );
+            mImageButtonCamera.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //todo make manage
                         }
                     }
             );

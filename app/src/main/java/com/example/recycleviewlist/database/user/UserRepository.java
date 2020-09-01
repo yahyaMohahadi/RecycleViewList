@@ -36,8 +36,13 @@ public class UserRepository implements UserReposible {
                     UserDataBase.class,
                     User.COLS.NAME_DB_FILE
             ).build();
-            if (!mDatabase.getUserDio().isUserExist("root", "root"))
-                mDatabase.getUserDio().addUser(new User("root", "root"));
+            if (!mDatabase.getUserDio().isUserExist("root", "root")) {
+                User.Builder builder = new User.Builder();
+                mDatabase.getUserDio().addUser(builder
+                        .setName("root")
+                        .setPassword("root")
+                        .creat());
+            }
         }
         return mUserRepository;
     }
@@ -58,7 +63,12 @@ public class UserRepository implements UserReposible {
     public User isUserExist(String name, String password) {
         UUID uuid = mDatabase.getUserDio().getUserUUID(name, password);
         if (uuid != null) {
-            return new User(name, password, uuid);
+            return
+                    new User.Builder()
+                            .setName(name)
+                            .setPassword(password)
+                            .setUUID(uuid)
+                            .creat();
         }
         return null;
     }

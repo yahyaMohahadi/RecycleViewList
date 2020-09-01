@@ -5,7 +5,11 @@ import androidx.annotation.NonNull;
 import com.example.recycleviewlist.model.User;
 
 public class OnlineUser {
-    public static User mUserRoot = new User("root", "root");
+    public static User mUserRoot =
+            new User.Builder()
+                    .setName("root")
+                    .setPassword("root")
+                    .creat();
     private static OnlineUser mOnlineUser;
     private static User onlineUser;
     private Boolean isRoot = false;
@@ -29,9 +33,9 @@ public class OnlineUser {
     }
 
     public void setOnlineUser(@NonNull User onlineUser) {
-        if (onlineUser.getStringPassword()==mUserRoot.getStringPassword()&&
-                onlineUser.getStringName()==mUserRoot.getStringName())
-            isRoot=true;
+        if (onlineUser.getStringPassword() == mUserRoot.getStringPassword() &&
+                onlineUser.getStringName() == mUserRoot.getStringName())
+            isRoot = true;
         OnlineUser.onlineUser = onlineUser;
     }
 }
