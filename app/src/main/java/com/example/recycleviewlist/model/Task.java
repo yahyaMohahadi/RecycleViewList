@@ -92,7 +92,7 @@ public class Task implements Serializable {
         private State mState = State.DONE;
         private String mStringTitle;
         private String mStringDescription;
-        private Date mDate = new Date();
+        private Date mDate ;
 
         public Bulder() {
         }
@@ -159,16 +159,5 @@ public class Task implements Serializable {
         public static final String CUL_DATE = "date";
         public static final String CUL_UUID = "uuid";
         public static final String CUL_UUID_USER = "uuidUser";
-    }
-
-    //for room
-    public Task(Long id, UUID mUUID, UUID mIDUser, State mState, String mStringTitle, String mStringDescription, Date mDate) {
-        this.id = id;
-        this.mUUID = mUUID;
-        this.mIDUser = mIDUser;
-        this.mState = mState;
-        this.mStringTitle = mStringTitle;
-        this.mStringDescription = mStringDescription;
-        this.mDate = mDate;
     }
 }

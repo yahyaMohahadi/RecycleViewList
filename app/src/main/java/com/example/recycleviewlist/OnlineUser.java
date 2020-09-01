@@ -6,6 +6,7 @@ import com.example.recycleviewlist.model.User;
 
 public class OnlineUser {
     public static User mUserRoot =
+
             new User.Builder()
                     .setName("root")
                     .setPassword("root")

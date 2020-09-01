@@ -76,15 +76,17 @@ public class LoginFragment extends Fragment {
 
     //TODO declerate newIntent in mainActivity
     private void login() {
-        User user = UserRepository.getInstance(getActivity().getApplicationContext()).isUserExist(
-                mEditTextUserNameLogin.getText().toString(),
-                mEditTextUserPasswordLogin.getText().toString());
         if (mEditTextUserNameLogin.getText().toString().equals("root") &&
                 mEditTextUserPasswordLogin.getText().toString().equals("root")) {
             OnlineUser.newInstance().setOnlineUser(OnlineUser.mUserRoot);
             startActivity(new Intent(LoginFragment.this.getActivity(), MainActivity.class));
             return;
         }
+
+        User user = UserRepository.getInstance(getActivity().getApplicationContext()).isUserExist(
+                mEditTextUserNameLogin.getText().toString(),
+                mEditTextUserPasswordLogin.getText().toString());
+
         if (user != null) {
             OnlineUser.newInstance().setOnlineUser(user);
             startActivity(new Intent(LoginFragment.this.getActivity(), MainActivity.class));
@@ -105,7 +107,7 @@ public class LoginFragment extends Fragment {
                             .setPassword(mEditTextUserPasswordSignUp.getText().toString())
                             .creat();
 
-            UserRepository.getInstance(getActivity().getApplicationContext()).addUser(user);
+            UserRepository.getInstance(getActivity()).addUser(user);
             OnlineUser.newInstance().setOnlineUser(user);
             startActivity(new Intent(LoginFragment.this.getActivity(), MainActivity.class));
             Toast.makeText(getActivity(), "created successfully!", Toast.LENGTH_SHORT).show();

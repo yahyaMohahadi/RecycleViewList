@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,9 +40,6 @@ public class TaskHandleDialog extends DialogFragment {
     private RadioButton mRadioButtonTodo;
 
     public static TaskHandleDialog newInstance(StateHandler state, Task task) {
-        Intent intent = new Intent();
-        intent.putExtra(KEY_STATE_HANDLER, state);
-        intent.putExtra(KEY_STATE_TASK, task);
         Bundle args = new Bundle();
         args.putSerializable(KEY_STATE_HANDLER, state);
         args.putSerializable(KEY_STATE_TASK, task);
@@ -83,6 +81,7 @@ public class TaskHandleDialog extends DialogFragment {
 
     private void setArguments() {
         mTask = (Task) getArguments().getSerializable(KEY_STATE_TASK);
+        Log.d("QQQ",mTask.getUUID().toString());
         mState = mTask.getState();
         mStateHandler = (StateHandler) getArguments().getSerializable(KEY_STATE_HANDLER);
     }

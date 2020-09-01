@@ -2,6 +2,7 @@ package com.example.recycleviewlist.database.task;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.room.Room;
 
 import com.example.recycleviewlist.OnlineUser;
@@ -24,7 +25,9 @@ public class TaskRepository implements Reposible {
         mContext = context;
         if (getInstance == null) {
             getInstance = new TaskRepository();
-            mDatabase = Room.databaseBuilder(mContext, TaskDataBase.class, Task.COLS.NAME_DB_FILE).build();
+            mDatabase = Room.databaseBuilder(mContext, TaskDataBase.class, Task.COLS.NAME_DB_FILE)
+                    .allowMainThreadQueries()
+                    .build();
         }
         return getInstance;
     }
@@ -42,7 +45,7 @@ public class TaskRepository implements Reposible {
     }
 
     @Override
-    public List<Task> getListTasks(State state) {
+    public List<Task> getListTasks(@NonNull State state) {
         UUID onlineUser = OnlineUser.newInstance().getOnlineUser().getUUID();
         switch (state) {
             case DONE: {

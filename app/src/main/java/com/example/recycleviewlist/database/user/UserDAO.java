@@ -7,8 +7,6 @@ import androidx.room.Query;
 
 import com.example.recycleviewlist.model.User;
 
-import java.util.UUID;
-
 @Dao
 public interface UserDAO {
 
@@ -18,9 +16,9 @@ public interface UserDAO {
     @Delete
     void deleteUser(User user);
 
-    @Query("SELECT * FROM USERS WHERE Password = :password AND UserName = :name")
-    boolean isUserExist(String name, String password);
+    @Query("SELECT COUNT(*) FROM USERS WHERE Password = :password AND UserName = :name")
+    int getUserCount(String name, String password);
 
-    @Query("SELECT * FROM USERS WHERE Password = :password AND UserName = :name")
-    UUID getUserUUID(String name, String password);
+    @Query("SELECT * FROM USERS WHERE Password = :password AND UserName = :name limit 1")
+    User getUser(String name, String password);
 }

@@ -29,14 +29,18 @@ public class UserRepository implements UserReposible {
     }
 
     public static UserRepository getInstance(Context context) {
+
         mContext = context;
         if (mDatabase == null) {
+            mUserRepository = new UserRepository();
             mDatabase = Room.databaseBuilder(
                     mContext,
                     UserDataBase.class,
                     User.COLS.NAME_DB_FILE
-            ).build();
-            if (!mDatabase.getUserDio().isUserExist("root", "root")) {
+            )
+                    .allowMainThreadQueries()
+                    .build();
+            if (mDatabase.getUserDio().getUserCount("root", "root")==0) {
                 User.Builder builder = new User.Builder();
                 mDatabase.getUserDio().addUser(builder
                         .setName("root")
@@ -49,9 +53,9 @@ public class UserRepository implements UserReposible {
 
     @Override
     public Boolean addUser(User user) {
-        if (!mDatabase.getUserDio().isUserExist("root", "root"))
+        if (mDatabase.getUserDio().getUserCount(user.getStringName(), user.getStringPassword())==0)
             mDatabase.getUserDio().addUser(user);
-        return !mDatabase.getUserDio().isUserExist("root", "root");
+        return mDatabase.getUserDio().getUserCount("root", "root")!=0;
     }
 
     @Override
@@ -61,13 +65,12 @@ public class UserRepository implements UserReposible {
 
     @Override
     public User isUserExist(String name, String password) {
-        UUID uuid = mDatabase.getUserDio().getUserUUID(name, password);
-        if (uuid != null) {
+        if (mDatabase.getUserDio().getUser(name, password) != null) {
             return
                     new User.Builder()
                             .setName(name)
                             .setPassword(password)
-                            .setUUID(uuid)
+                            .setUUID(UUID.randomUUID())
                             .creat();
         }
         return null;

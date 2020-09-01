@@ -1,6 +1,7 @@
 package com.example.recycleviewlist.fragment;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.Holder
         adapter.setContext(context);
         adapter.setState(state);
         adapter.setFragment(fragment);
-        return new WorkListAdapter();
+        return adapter;
     }
 
     public void setState(State state) {
@@ -86,9 +87,14 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.Holder
                 @Override
                 public void onClick(View view) {
                     DialogFragment fragmentAdd = TaskHandleDialog.newInstance(StateHandler.EDIT,
-                            TaskRepository.getInstance(mContext).getListTasks(mState).get(getItemCount()));
+                            TaskRepository.getInstance(mContext).getListTasks(mState).get(getItemCount()-1));
+
                     fragmentAdd.setTargetFragment(mFragment, REQUEST_COD_EDIT);
                     fragmentAdd.show(mFragment.getFragmentManager(), "TAG");
+                    Log.d("QQQ",
+
+                            TaskRepository.getInstance(mContext).getListTasks(mState).get(getItemCount()-1).getDate().toString()
+                    );
                 }
             });
             mImageViewTime.setOnClickListener(
@@ -96,7 +102,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.Holder
                         @Override
                         public void onClick(View view) {
                             Picker time = (Picker) TimePickerFragment.newInstance(
-                                    TaskRepository.getInstance(mContext).getListTasks(mState).get(getItemCount())
+                                    TaskRepository.getInstance(mContext).getListTasks(mState).get(getItemCount()-1)
                             );
                             time.setTargetFragment(mFragment, REQUEST_CODE_TIME_PICKER);
                             time.show(mFragment.getFragmentManager(), "tag");
@@ -108,7 +114,8 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.Holder
                         @Override
                         public void onClick(View view) {
                             Picker calander = (Picker) DatePickerFragment.newInstance(
-                                    TaskRepository.getInstance(mContext).getListTasks(mState).get(getItemCount())
+                                    TaskRepository.getInstance(mContext).getListTasks(mState).get(getItemCount()-1)
+
                             );
                             calander.setTargetFragment(mFragment, REQUEST_CODE_DATEPICKER);
                             calander.show(mFragment.getFragmentManager(), "tag");

@@ -28,6 +28,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class MainFragment extends Fragment {
@@ -139,6 +140,7 @@ public class MainFragment extends Fragment {
                 DialogFragment fragmentAdd = TaskHandleDialog.newInstance(StateHandler.NEW,
                         new Task.Bulder()
                                 .setTitle("")
+                                .setDate(new Date())
                                 .setState(mStates.get(mIntCurrent))
                                 .creat()
                 );
