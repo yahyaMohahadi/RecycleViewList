@@ -1,5 +1,6 @@
 package com.example.recycleviewlist.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,13 +10,22 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.database.task.TaskRepository;
+import com.example.recycleviewlist.fragment.pickers.DatePickerFragment;
+import com.example.recycleviewlist.fragment.pickers.Picker;
+import com.example.recycleviewlist.fragment.pickers.TimePickerFragment;
 import com.example.recycleviewlist.model.State;
+import com.example.recycleviewlist.model.StateHandler;
+import com.example.recycleviewlist.model.Task;
+
+import java.util.Date;
+import java.util.UUID;
 
 import static com.example.recycleviewlist.R.id;
 import static com.example.recycleviewlist.R.layout;
@@ -28,6 +38,10 @@ public class WorkListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private WorkListAdapter mAdapterTask;
     private State mState;
+    public static final int REQUEST_COD_EDIT = 1;
+    public static final int REQUEST_CODE_TIME_PICKER = 2;
+    public static final int REQUEST_CODE_DATEPICKER = 4;
+
 
     public static Intent newIntent(Context context, State state) {
         Intent instance = new Intent(context, WorkListFragment.class);
@@ -78,6 +92,10 @@ public class WorkListFragment extends Fragment {
             if (mAdapterTask == null) {
                 addAdapter();
             } else {
+                //todo it not good performance make notify change for one task
+                mAdapterTask.setList(
+                        TaskRepository.getInstance(getActivity()).getListTasks(mState)
+                );
                 mAdapterTask.notifyDataSetChanged();
             }
         }
@@ -86,17 +104,73 @@ public class WorkListFragment extends Fragment {
 
     public void addAdapter() {
         mAdapterTask = WorkListAdapter.newInstance(
-                getActivity().getApplicationContext(),
-                this,
-                mState
+                getActivity(),
+                TaskRepository.getInstance(getActivity()).getListTasks(mState)
         );
+        mAdapterTask.setCallbacks(new WorkListAdapter.Callbacks() {
+            @Override
+            public void itemCall(UUID uuid) {
+                DialogFragment fragmentAdd = TaskHandleDialog.newInstance(
+                        StateHandler.EDIT,
+                        uuid
+                );
+                //todo get result
+                fragmentAdd.setTargetFragment(WorkListFragment.this, REQUEST_COD_EDIT);
+                fragmentAdd.show(getFragmentManager(), "TAG");
+            }
+
+            @Override
+            public void calenderCall(UUID uuid) {
+                Picker calander = (Picker) DatePickerFragment.newInstance(
+                        TaskRepository.getInstance(getActivity())
+                                .getTask(uuid)
+                                .getDate(), uuid
+
+                );
+
+                calander.setTargetFragment(WorkListFragment.this, REQUEST_CODE_DATEPICKER);
+                calander.show(getFragmentManager(), "tag");
+            }
+
+            @Override
+            public void timeCall(UUID uuid) {
+                Picker time = (Picker) TimePickerFragment.newInstance(
+                        TaskRepository.getInstance(getActivity())
+                                .getTask(uuid)
+                                .getDate(), uuid
+
+                );
+
+                time.setTargetFragment(WorkListFragment.this, REQUEST_CODE_TIME_PICKER);
+                time.show(getFragmentManager(), "taG");
+            }
+        });
         mRecyclerView.setAdapter(mAdapterTask);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK || data == null) {
+            return;
+        } else if (requestCode == REQUEST_CODE_DATEPICKER) {
+            Date date = (Date) data.getSerializableExtra(DatePickerFragment.KEY_DATE_PICKER);
+            UUID uuid = (UUID) data.getSerializableExtra(DatePickerFragment.KEY_UUID);
+            Task task = TaskRepository.getInstance(getActivity()).getTask(uuid);
+            task.setDate(date);
+            TaskRepository.getInstance(getActivity()).setTask(task);
+
+        } else if (requestCode == REQUEST_CODE_TIME_PICKER) {
+            Date date = (Date) data.getSerializableExtra(TimePickerFragment.KEY_RESULT_TIME_PICKER);
+            UUID uuid = (UUID) data.getSerializableExtra(TimePickerFragment.KEY_UUID);
+            Task task = TaskRepository.getInstance(getActivity()).getTask(uuid);
+            task.setDate(date);
+            TaskRepository.getInstance(getActivity()).setTask(task);
+
+        } else if (requestCode == REQUEST_COD_EDIT) {
+            UUID uuid = (UUID) data.getSerializableExtra(TaskHandleDialog.KEY_UUID);
+        }
+        //todo hard prosees make ckange just onew item
         checkTasksInDataBase();
-        mAdapterTask.notifyDataSetChanged();
     }
 }

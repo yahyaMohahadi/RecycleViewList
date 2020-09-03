@@ -45,6 +45,12 @@ public class TaskRepository implements Reposible {
     }
 
     @Override
+    public Task getTask(UUID uuid) {
+        return mDatabase.getTaskDAO().getTask(uuid);
+
+    }
+
+    @Override
     public List<Task> getListTasks(@NonNull State state) {
         UUID onlineUser = OnlineUser.newInstance().getOnlineUser().getUUID();
         switch (state) {
@@ -117,6 +123,8 @@ interface Reposible {
 
     //read
     List<Task> getListTasks();
+
+    Task getTask(UUID uuid);
 
     public List<Task> getListTasks(State state);
 

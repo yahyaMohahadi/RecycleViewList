@@ -1,159 +1,36 @@
 package com.example.recycleviewlist.fragment;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recycleviewlist.R;
-import com.example.recycleviewlist.database.task.TaskRepository;
-import com.example.recycleviewlist.fragment.pickers.DatePickerFragment;
-import com.example.recycleviewlist.fragment.pickers.Picker;
-import com.example.recycleviewlist.fragment.pickers.TimePickerFragment;
-import com.example.recycleviewlist.model.State;
-import com.example.recycleviewlist.model.StateHandler;
 import com.example.recycleviewlist.model.Task;
+
+import java.util.List;
+import java.util.UUID;
 
 public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.Holder> {
 
-    public static final int REQUEST_COD_EDIT = 1;
-    public static final int REQUEST_CODE_DATEPICKER = 3;
-    public static final int REQUEST_CODE_TIME_PICKER = 4;
+
+    private Callbacks mCallbacks;
+    private List<Task> mList;
     private Context mContext;
-    private State mState;
-    private Fragment mFragment;
 
     private WorkListAdapter() {
     }
 
-    public static WorkListAdapter newInstance(Context context, Fragment fragment, State state) {
+    public static WorkListAdapter newInstance(@NonNull Context context, @NonNull List<Task> tasks) {
         WorkListAdapter adapter = new WorkListAdapter();
+        adapter.setList(tasks);
         adapter.setContext(context);
-        adapter.setState(state);
-        adapter.setFragment(fragment);
         return adapter;
-    }
-
-    public void setState(State state) {
-        mState = state;
-    }
-
-    public void setFragment(Fragment fragment) {
-        mFragment = fragment;
-    }
-
-    public void setContext(Context sContext) {
-        this.mContext = sContext;
-    }
-
-    public class Holder extends RecyclerView.ViewHolder {
-        private TextView mTextViewName;
-        private ConstraintLayout mConstraintLayout;
-        private ImageView mImageViewTime;
-        private ImageView mImageViewCalender;
-
-        private ImageButton mImageButtonShare;
-        private ImageButton mImageButtonFlder;
-        private ImageButton mImageButtonCamera;
-
-        public Holder(@NonNull View itemView) {
-            super(itemView);
-            findView(itemView);
-            setOnCklick(itemView);
-        }
-
-        private void findView(@NonNull View itemView) {
-            mTextViewName = itemView.findViewById(R.id.textView_name);
-            mConstraintLayout = itemView.findViewById(R.id.constrain_list);
-            mImageViewTime = itemView.findViewById(R.id.imageView_time);
-            mImageViewCalender = itemView.findViewById(R.id.imageView_calandar);
-            mImageButtonShare = itemView.findViewById(R.id.button_share);
-            mImageButtonFlder= itemView.findViewById(R.id.button_folder);
-            mImageButtonCamera= itemView.findViewById(R.id.button_camera);
-        }
-
-        private void setOnCklick(View itemView) {
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    DialogFragment fragmentAdd = TaskHandleDialog.newInstance(StateHandler.EDIT,
-                            TaskRepository.getInstance(mContext).getListTasks(mState).get(getItemCount()-1));
-
-                    fragmentAdd.setTargetFragment(mFragment, REQUEST_COD_EDIT);
-                    fragmentAdd.show(mFragment.getFragmentManager(), "TAG");
-                    Log.d("QQQ",
-
-                            TaskRepository.getInstance(mContext).getListTasks(mState).get(getItemCount()-1).getDate().toString()
-                    );
-                }
-            });
-            mImageViewTime.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Picker time = (Picker) TimePickerFragment.newInstance(
-                                    TaskRepository.getInstance(mContext).getListTasks(mState).get(getItemCount()-1)
-                            );
-                            time.setTargetFragment(mFragment, REQUEST_CODE_TIME_PICKER);
-                            time.show(mFragment.getFragmentManager(), "tag");
-                        }
-                    }
-            );
-            mImageViewCalender.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Picker calander = (Picker) DatePickerFragment.newInstance(
-                                    TaskRepository.getInstance(mContext).getListTasks(mState).get(getItemCount()-1)
-
-                            );
-                            calander.setTargetFragment(mFragment, REQUEST_CODE_DATEPICKER);
-                            calander.show(mFragment.getFragmentManager(), "tag");
-                        }
-                    }
-            );
-            mImageButtonShare.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //todo make manage
-                        }
-                    }
-            );
-            mImageButtonFlder.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //todo make manage
-                        }
-                    }
-            );
-            mImageButtonCamera.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //todo make manage
-                        }
-                    }
-            );
-        }
-
-        public void bind(int position) {
-            Task task = TaskRepository.getInstance(mContext).getListTasks(mState).get(position);
-            if (task != null) {
-                mTextViewName.setText(task.getStringTitle());
-            }
-        }
     }
 
     @NonNull
@@ -171,6 +48,131 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.Holder
 
     @Override
     public int getItemCount() {
-        return TaskRepository.getInstance(mContext).getListTasks(mState).size();
+        return mList.size();
+    }
+
+    public List<Task> getList() {
+        return mList;
+    }
+
+    public void setList(List<Task> list) {
+        mList = list;
+    }
+
+    public void setCallbacks(Callbacks callbacks) {
+        mCallbacks = callbacks;
+    }
+
+    public void setContext(Context context) {
+        mContext = context;
+    }
+
+
+    public class Holder extends RecyclerView.ViewHolder {
+        private TextView mTextViewName;
+        private ImageView mImageViewTime;
+        private ImageView mImageViewCalender;
+        private Task mTask;
+
+        public Holder(@NonNull View itemView) {
+            super(itemView);
+            findView(itemView);
+
+        }
+
+        private void findView(@NonNull View itemView) {
+            mTextViewName = itemView.findViewById(R.id.textView_name);
+            mImageViewTime = itemView.findViewById(R.id.imageView_time);
+            mImageViewCalender = itemView.findViewById(R.id.imageView_calandar);
+
+        }
+
+        private void setOnCklick(View itemView) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mCallbacks.itemCall(mTask.getUUID());
+
+                }
+            });
+            mImageViewTime.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            mCallbacks.timeCall(mTask.getUUID());
+
+                        }
+                    }
+            );
+            mImageViewCalender.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            mCallbacks.calenderCall(mTask.getUUID());
+
+                        }
+                    }
+            );
+
+        }
+
+        public void bind(int position) {
+            mTask = mList.get(position);
+            setOnCklick(itemView);
+            if (mTask != null) {
+                mTextViewName.setText(mTask.getStringTitle());
+            }
+        }
+    }
+
+
+    public interface Callbacks {
+
+        void itemCall(UUID uuid);
+
+        void calenderCall(UUID uuid);
+
+        void timeCall(UUID uuid);
     }
 }
+
+
+/*
+    private ImageButton mImageButtonShare;
+    private ImageButton mImageButtonFlder;
+    private ImageButton mImageButtonCamera;
+
+    private ImageButton mImageButtonShare;
+    private ImageButton mImageButtonFlder;
+    private ImageButton mImageButtonCamera;*/
+
+        /*    mImageButtonShare = itemView.findViewById(R.id.button_share);
+                    mImageButtonFlder= itemView.findViewById(R.id.button_folder);
+                    mImageButtonCamera= itemView.findViewById(R.id.button_camera);*/
+
+
+/*
+            mImageButtonShare.setOnClickListener(
+                    new View.OnClickListener() {
+@Override
+public void onClick(View view) {
+        //todo make manage
+        }
+        }
+        );
+        mImageButtonFlder.setOnClickListener(
+        new View.OnClickListener() {
+@Override
+public void onClick(View view) {
+        //todo make manage
+        }
+        }
+        );
+        mImageButtonCamera.setOnClickListener(
+        new View.OnClickListener() {
+@Override
+public void onClick(View view) {
+        //todo make manage
+        }
+        }
+        );*/

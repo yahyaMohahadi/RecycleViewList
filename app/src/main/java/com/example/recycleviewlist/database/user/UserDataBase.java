@@ -7,7 +7,7 @@ import androidx.room.TypeConverters;
 import com.example.recycleviewlist.utils.Convertors;
 import com.example.recycleviewlist.model.User;
 
-@Database(entities = User.class, version = User.COLS.VERSION_DB_USER)
+@Database(entities = User.class, version = User.COLS.VERSION_DB_USER,exportSchema = false)
 @TypeConverters({Convertors.class})
 public abstract class UserDataBase extends RoomDatabase {
     public abstract UserDAO getUserDio();

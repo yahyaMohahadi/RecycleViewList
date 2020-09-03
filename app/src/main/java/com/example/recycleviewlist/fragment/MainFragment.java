@@ -20,6 +20,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.recycleviewlist.OnlineUser;
 import com.example.recycleviewlist.R;
+import com.example.recycleviewlist.database.task.TaskRepository;
 import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.model.StateHandler;
 import com.example.recycleviewlist.model.Task;
@@ -35,6 +36,7 @@ public class MainFragment extends Fragment {
 
     public static final int REQUEST_COD_ADD = 0;
     public static final int REQUEST_COD_ALERT = 3;
+
     ViewPager2 mViewPagerTask;
     List<State> mStates = new ArrayList<>(Arrays.asList(State.TODO, State.DOING, State.DONE));
     TextView mTextViewDone;
@@ -68,7 +70,6 @@ public class MainFragment extends Fragment {
                     WorkListFragment.newIntent(
                             getActivity(), mStates.get(i)
                     ));
-
             mFragments[i] = fragment;
         }
     }
@@ -137,12 +138,14 @@ public class MainFragment extends Fragment {
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Task add = new Task.Bulder()
+                        .setTitle("")
+                        .setDate(new Date())
+                        .setState(mStates.get(mIntCurrent))
+                        .creat();
+                TaskRepository.getInstance(getActivity()).addTask(add);
                 DialogFragment fragmentAdd = TaskHandleDialog.newInstance(StateHandler.NEW,
-                        new Task.Bulder()
-                                .setTitle("")
-                                .setDate(new Date())
-                                .setState(mStates.get(mIntCurrent))
-                                .creat()
+                        add.getUUID()
                 );
                 fragmentAdd.setTargetFragment(mFragments[mIntCurrent], REQUEST_COD_ADD);
                 fragmentAdd.show(getActivity().getSupportFragmentManager(), "TAG");
@@ -219,6 +222,10 @@ public class MainFragment extends Fragment {
                 break;
         }
     }
+
+
+
+
 
     private class ViewPagerAdapter extends FragmentStateAdapter {
 

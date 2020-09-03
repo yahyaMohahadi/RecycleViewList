@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +24,15 @@ import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.model.StateHandler;
 import com.example.recycleviewlist.model.Task;
 
+import java.util.UUID;
+
 public class TaskHandleDialog extends DialogFragment {
     public static final String KEY_STATE_HANDLER = "com.example.recycleviewlist.activitystateForAdd";
-    public static final String KEY_STATE_TASK = "com.example.recycleviewlist.actitaskKey";
+    public static final String KEY_UUID_TASK = "com.example.recycleviewlist.actitaskKey";
+    public static final String KEY_UUID = "com.example.recycleviewlist.fragmentRESULTUUUID";
     private EditText mEditTextName;
     private EditText mEditTextDiscreption;
+    private UUID mTaskUUID;
     private Task mTask;
     private TextView mTextViewTimeShow;
     private State mState = State.DONE;
@@ -39,10 +42,10 @@ public class TaskHandleDialog extends DialogFragment {
     private RadioButton mRadioButtonDoing;
     private RadioButton mRadioButtonTodo;
 
-    public static TaskHandleDialog newInstance(StateHandler state, Task task) {
+    public static TaskHandleDialog newInstance(StateHandler state, UUID taskUUID) {
         Bundle args = new Bundle();
         args.putSerializable(KEY_STATE_HANDLER, state);
-        args.putSerializable(KEY_STATE_TASK, task);
+        args.putSerializable(KEY_UUID_TASK, taskUUID);
         TaskHandleDialog fragment = new TaskHandleDialog();
         fragment.setArguments(args);
         return fragment;
@@ -64,7 +67,7 @@ public class TaskHandleDialog extends DialogFragment {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int j) {
-                        okClick();
+                        okClickOk();
                         setResult(Activity.RESULT_OK);
                     }
                 })
@@ -73,15 +76,15 @@ public class TaskHandleDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int j) {
                         deleteTask();
-                        setResult(Activity.RESULT_CANCELED);
+                        setResult(Activity.RESULT_OK);
                     }
                 })
                 .create();
     }
 
     private void setArguments() {
-        mTask = (Task) getArguments().getSerializable(KEY_STATE_TASK);
-        Log.d("QQQ",mTask.getUUID().toString());
+        mTaskUUID = (UUID) getArguments().getSerializable(KEY_UUID_TASK);
+        mTask = TaskRepository.getInstance(getActivity()).getTask(mTaskUUID);
         mState = mTask.getState();
         mStateHandler = (StateHandler) getArguments().getSerializable(KEY_STATE_HANDLER);
     }
@@ -93,24 +96,20 @@ public class TaskHandleDialog extends DialogFragment {
     private void initViews() {
         setStateRadioGroup(mTask.getState());
         mTextViewTimeShow.setText(mTask.getDate().toString());
-        if (mStateHandler == StateHandler.NEW) {
-        } else {
             mEditTextDiscreption.setText(mTask.getStringDescription());
             mEditTextName.setText(mTask.getStringTitle());
-        }
     }
 
 
-    private void okClick() {
+    private void okClickOk() {
         mTask.setStringTitle(mEditTextName.getText().toString());
-        mTask.setState(mState);
         mTask.setStringDescription(mEditTextDiscreption.getText().toString());
         mTask.setState(getSatateRadioGroup());
-        if (mStateHandler == StateHandler.NEW) {
+/*        if (mStateHandler == StateHandler.NEW) {
             TaskRepository.getInstance(getActivity()).addTask(mTask);
-        } else if (mStateHandler == StateHandler.EDIT) {
-            TaskRepository.getInstance(getActivity()).setTask(mTask);
-        }
+        } else if (mStateHandler == StateHandler.EDIT) {*/
+        TaskRepository.getInstance(getActivity()).setTask(mTask);
+        //  }
     }
 
     @Override
@@ -168,6 +167,8 @@ public class TaskHandleDialog extends DialogFragment {
 
     private void setResult(int result) {
         Fragment fragment = getTargetFragment();
-        fragment.onActivityResult(getTargetRequestCode(), result, new Intent());
+        Intent data = new Intent();
+        data.putExtra(KEY_UUID,mTaskUUID);
+        fragment.onActivityResult(getTargetRequestCode(), result, data);
     }
 }
