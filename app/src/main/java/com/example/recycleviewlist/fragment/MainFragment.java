@@ -236,9 +236,9 @@ public class MainFragment extends Fragment {
         } else if (requestCode == REQUEST_COD_ADD) {
             State stateChange = (State) data.getSerializableExtra(TaskHandleDialog.KEY_STATE);
             ((WorkListFragment) mFragments[(mStates.indexOf(stateChange))]).checkTasksInDataBase();
-        }else if(requestCode == REQUEST_COD_ALERT_DELETE){
+        } else if (requestCode == REQUEST_COD_ALERT_DELETE) {
             deleteAllTasks();
-        }else if(requestCode==REQUEST_COD_ALERT_DELETE_ACUNT){
+        } else if (requestCode == REQUEST_COD_ALERT_DELETE_ACUNT) {
             deleteAcount();
         }
     }
@@ -252,8 +252,8 @@ public class MainFragment extends Fragment {
     }
 
     private void deleteAllTasks() {
-        for (Fragment fragment:mFragments) {
-            if (OnlineUser.newInstance().getRoot()){
+        for (Fragment fragment : mFragments) {
+            if (OnlineUser.newInstance().getRoot()) {
                 TaskRepository.getInstance(getActivity())
                         .removeTasksAllUsers();
             }

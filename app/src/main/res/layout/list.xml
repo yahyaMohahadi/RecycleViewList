@@ -13,12 +13,12 @@
         android:layout_height="30dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:text="TextView"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="#0AF114"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageView_calandar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -46,43 +46,6 @@
         app:srcCompat="@mipmap/ic_calander"
         tools:ignore="MissingConstraints" />
 
-    <ImageButton
-        android:id="@+id/button_share"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="#00FFFFFF"
-        android:src="@android:drawable/ic_menu_share"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_name" />
 
-    <ImageButton
-        android:id="@+id/button_camera"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:background="#00FFFFFF"
-        android:src="@android:drawable/ic_menu_camera"
-        android:text="Button"
-        app:layout_constraintStart_toEndOf="@+id/button_share"
-        app:layout_constraintTop_toTopOf="@+id/button_share" />
-
-    <ImageButton
-        android:id="@+id/button_folder"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:background="#00FFFFFF"
-        android:src="@drawable/ic_folder"
-        android:text="Button"
-        app:layout_constraintStart_toEndOf="@+id/button_camera"
-        app:layout_constraintTop_toTopOf="@+id/button_camera" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

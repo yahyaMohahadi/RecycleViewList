@@ -137,42 +137,4 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.Holder
 }
 
 
-/*
-    private ImageButton mImageButtonShare;
-    private ImageButton mImageButtonFlder;
-    private ImageButton mImageButtonCamera;
 
-    private ImageButton mImageButtonShare;
-    private ImageButton mImageButtonFlder;
-    private ImageButton mImageButtonCamera;*/
-
-        /*    mImageButtonShare = itemView.findViewById(R.id.button_share);
-                    mImageButtonFlder= itemView.findViewById(R.id.button_folder);
-                    mImageButtonCamera= itemView.findViewById(R.id.button_camera);*/
-
-
-/*
-            mImageButtonShare.setOnClickListener(
-                    new View.OnClickListener() {
-@Override
-public void onClick(View view) {
-        //todo make manage
-        }
-        }
-        );
-        mImageButtonFlder.setOnClickListener(
-        new View.OnClickListener() {
-@Override
-public void onClick(View view) {
-        //todo make manage
-        }
-        }
-        );
-        mImageButtonCamera.setOnClickListener(
-        new View.OnClickListener() {
-@Override
-public void onClick(View view) {
-        //todo make manage
-        }
-        }
-        );*/

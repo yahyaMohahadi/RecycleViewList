@@ -5,11 +5,15 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -18,12 +22,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import com.example.recycleviewlist.OnlineUser;
 import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.database.task.TaskRepository;
 import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.model.StateHandler;
 import com.example.recycleviewlist.model.Task;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.UUID;
 
 public class TaskHandleDialog extends DialogFragment {
@@ -31,6 +38,7 @@ public class TaskHandleDialog extends DialogFragment {
     public static final String KEY_UUID_TASK = "com.example.recycleviewlist.actitaskKey";
     public static final String KEY_UUID = "com.example.recycleviewlist.fragmentRESULTUUUID";
     public static final String KEY_STATE = "com.example.recycleviewlist.fragmentSTATE";
+    public static final int REQUEST_CODE_IMAGE_CAMERA = 0;
     private EditText mEditTextName;
     private EditText mEditTextDiscreption;
     private UUID mTaskUUID;
@@ -42,6 +50,13 @@ public class TaskHandleDialog extends DialogFragment {
     private RadioButton mRadioButtonDone;
     private RadioButton mRadioButtonDoing;
     private RadioButton mRadioButtonTodo;
+
+    private ImageButton mImageButtonShare;
+    private ImageButton mImageButtonFlder;
+    private ImageButton mImageButtonCamera;
+
+    private ImageView mImageViewDitail;
+    Uri imageUri;
 
     public static TaskHandleDialog newInstance(StateHandler state, UUID taskUUID) {
         Bundle args = new Bundle();
@@ -57,6 +72,7 @@ public class TaskHandleDialog extends DialogFragment {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View view = inflater.inflate(R.layout.handler_dialog_fragment, null);
         findView(view);
+        setOnClick();
         setArguments();
         initViews();
         return new AlertDialog.Builder(getActivity())
@@ -83,6 +99,48 @@ public class TaskHandleDialog extends DialogFragment {
                 .create();
     }
 
+    private void setOnClick() {
+
+        mImageButtonShare.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                        shareIntent.setType("text/plain");
+                        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, getTextShare());
+                        startActivity(shareIntent);
+                    }
+
+                    private String getTextShare() {
+                        return "This is task manager app" +
+                                "\nUSER : " + OnlineUser.newInstance().getOnlineUser().getStringName() +
+                                "\nTASK : " + mTask.getStringTitle() +
+                                "\nDESCRIPTION : " + mTask.getStringDescription() +
+                                "\nTIME : " + mTask.getDate().toString() +
+                                "\nSTATE : " + (mTask.getState().toString()).toLowerCase();
+                    }
+                }
+        );
+        mImageButtonFlder.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //todo make manage
+                    }
+                }
+        );
+        mImageButtonCamera.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                        if (takePicture.resolveActivity(getActivity().getPackageManager()) != null)
+                            startActivityForResult(takePicture, REQUEST_CODE_IMAGE_CAMERA);
+                    }
+                }
+        );
+    }
+
     private void setArguments() {
         mTaskUUID = (UUID) getArguments().getSerializable(KEY_UUID_TASK);
         mTask = TaskRepository.getInstance(getActivity()).getTask(mTaskUUID);
@@ -97,8 +155,8 @@ public class TaskHandleDialog extends DialogFragment {
     private void initViews() {
         setStateRadioGroup(mTask.getState());
         mTextViewTimeShow.setText(mTask.getDate().toString());
-            mEditTextDiscreption.setText(mTask.getStringDescription());
-            mEditTextName.setText(mTask.getStringTitle());
+        mEditTextDiscreption.setText(mTask.getStringDescription());
+        mEditTextName.setText(mTask.getStringTitle());
     }
 
 
@@ -128,6 +186,10 @@ public class TaskHandleDialog extends DialogFragment {
         mRadioButtonDone = view.findViewById(R.id.radioButton_done);
         mRadioButtonDoing = view.findViewById(R.id.radioButton_doing);
         mRadioButtonTodo = view.findViewById(R.id.radioButton_todo);
+        mImageButtonShare = view.findViewById(R.id.button_share);
+        mImageButtonFlder = view.findViewById(R.id.button_folder);
+        mImageButtonCamera = view.findViewById(R.id.button_camera);
+        mImageViewDitail = view.findViewById(R.id.imageView_detail);
 
     }
 
@@ -169,8 +231,43 @@ public class TaskHandleDialog extends DialogFragment {
     private void setResult() {
         Fragment fragment = getTargetFragment();
         Intent data = new Intent();
-        data.putExtra(KEY_STATE,mTask.getState());
-        data.putExtra(KEY_UUID,mTaskUUID);
+        data.putExtra(KEY_STATE, mTask.getState());
+        data.putExtra(KEY_UUID, mTaskUUID);
         fragment.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK || data == null) {
+            return;
+        } else if (requestCode == REQUEST_CODE_IMAGE_CAMERA) {
+            Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
+            //todo save it in sandbox it dont work
+            //saveImage(selectedImage);
+
+            mImageViewDitail.setImageBitmap(selectedImage);
+
+        }
+    }
+
+    private void saveImage(Bitmap selectedImage) {
+        File sandbox = getActivity().getExternalFilesDir(null);
+        if (!sandbox.exists()){
+            sandbox.mkdir();
+        }
+        File photos = new File(sandbox + "/Photos");
+        if (!photos.exists()) {
+            photos.mkdir();
+        }
+        File file = new File(photos, mTask.getUUID().toString() + ".png");
+        try {
+            FileOutputStream fOut = new FileOutputStream(file);
+
+            selectedImage.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+            fOut.flush();
+            fOut.close();
+        } catch (Exception e) {
+        }
     }
 }
