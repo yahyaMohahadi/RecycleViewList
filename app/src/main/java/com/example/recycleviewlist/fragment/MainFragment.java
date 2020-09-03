@@ -1,5 +1,6 @@
 package com.example.recycleviewlist.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -21,6 +23,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.recycleviewlist.OnlineUser;
 import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.database.task.TaskRepository;
+import com.example.recycleviewlist.database.user.UserRepository;
 import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.model.StateHandler;
 import com.example.recycleviewlist.model.Task;
@@ -35,7 +38,8 @@ import java.util.List;
 public class MainFragment extends Fragment {
 
     public static final int REQUEST_COD_ADD = 0;
-    public static final int REQUEST_COD_ALERT = 3;
+    public static final int REQUEST_COD_ALERT_DELETE = 3;
+    public static final int REQUEST_COD_ALERT_DELETE_ACUNT = 4;
 
     ViewPager2 mViewPagerTask;
     List<State> mStates = new ArrayList<>(Arrays.asList(State.TODO, State.DOING, State.DONE));
@@ -92,7 +96,7 @@ public class MainFragment extends Fragment {
                         , "Are you sure to delete your acount?\nit means delete all task and settings"
                 );
 
-                setTargetFragment(mFragments[mIntCurrent], REQUEST_COD_ALERT);
+                alertDialog.setTargetFragment(this, REQUEST_COD_ALERT_DELETE_ACUNT);
                 alertDialog.show(getActivity().getSupportFragmentManager(), "eee");
                 return true;
             }
@@ -100,7 +104,7 @@ public class MainFragment extends Fragment {
                 AlertDialog alertDialog = AlertDialog.newInstance(getActivity(),
                         StateOrder.DELETE_TASK,
                         "Are you sure to clear all of your tasks?");
-                alertDialog.setTargetFragment(mFragments[mIntCurrent], REQUEST_COD_ALERT);
+                alertDialog.setTargetFragment(this, REQUEST_COD_ALERT_DELETE);
                 alertDialog.show(getActivity().getSupportFragmentManager(), "ttt");
                 return true;
             }
@@ -147,7 +151,7 @@ public class MainFragment extends Fragment {
                 DialogFragment fragmentAdd = TaskHandleDialog.newInstance(StateHandler.NEW,
                         add.getUUID()
                 );
-                fragmentAdd.setTargetFragment(mFragments[mIntCurrent], REQUEST_COD_ADD);
+                fragmentAdd.setTargetFragment(MainFragment.this, REQUEST_COD_ADD);
                 fragmentAdd.show(getActivity().getSupportFragmentManager(), "TAG");
             }
         });
@@ -224,8 +228,40 @@ public class MainFragment extends Fragment {
     }
 
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK || data == null) {
+            return;
+        } else if (requestCode == REQUEST_COD_ADD) {
+            State stateChange = (State) data.getSerializableExtra(TaskHandleDialog.KEY_STATE);
+            ((WorkListFragment) mFragments[(mStates.indexOf(stateChange))]).checkTasksInDataBase();
+        }else if(requestCode == REQUEST_COD_ALERT_DELETE){
+            deleteAllTasks();
+        }else if(requestCode==REQUEST_COD_ALERT_DELETE_ACUNT){
+            deleteAcount();
+        }
+    }
 
+    private void deleteAcount() {
+        deleteAllTasks();
+        UserRepository.getInstance(getActivity())
+                .deleteUser(OnlineUser.newInstance().getOnlineUser().getStringName());
 
+        getActivity().finish();
+    }
+
+    private void deleteAllTasks() {
+        for (Fragment fragment:mFragments) {
+            if (OnlineUser.newInstance().getRoot()){
+                TaskRepository.getInstance(getActivity())
+                        .removeTasksAllUsers();
+            }
+            TaskRepository.getInstance(getActivity())
+                    .removeTasksOnlineUser();
+            ((WorkListFragment) fragment).checkTasksInDataBase();
+        }
+    }
 
     private class ViewPagerAdapter extends FragmentStateAdapter {
 

@@ -6,9 +6,9 @@ import androidx.room.Room;
 
 import com.example.recycleviewlist.model.User;
 
-import java.util.UUID;
-
 interface UserReposible {
+    void deleteUser(String userNmae);
+
     //return null if it not exist return a user for online user
     public User isUserExist(String name, String password);
 
@@ -64,14 +64,19 @@ public class UserRepository implements UserReposible {
     }
 
     @Override
+    public void deleteUser(String userNmae) {
+        mDatabase.getUserDio().deleteUser(userNmae);
+    }
+
+    @Override
     public User isUserExist(String name, String password) {
         if (mDatabase.getUserDio().getUser(name, password) != null) {
-            return
-                    new User.Builder()
+            return mDatabase.getUserDio().getUser(name, password);
+                   /* new User.Builder()
                             .setName(name)
                             .setPassword(password)
                             .setUUID(UUID.randomUUID())
-                            .creat();
+                            .creat();*/
         }
         return null;
     }

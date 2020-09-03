@@ -13,6 +13,9 @@ public interface UserDAO {
     @Insert
     void addUser(User user);
 
+    @Query("DELETE FROM users WHERE UserName = :userName ")
+    void deleteUser(String userName);
+
     @Delete
     void deleteUser(User user);
 

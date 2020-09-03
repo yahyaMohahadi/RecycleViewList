@@ -30,6 +30,7 @@ public class TaskHandleDialog extends DialogFragment {
     public static final String KEY_STATE_HANDLER = "com.example.recycleviewlist.activitystateForAdd";
     public static final String KEY_UUID_TASK = "com.example.recycleviewlist.actitaskKey";
     public static final String KEY_UUID = "com.example.recycleviewlist.fragmentRESULTUUUID";
+    public static final String KEY_STATE = "com.example.recycleviewlist.fragmentSTATE";
     private EditText mEditTextName;
     private EditText mEditTextDiscreption;
     private UUID mTaskUUID;
@@ -68,7 +69,7 @@ public class TaskHandleDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int j) {
                         okClickOk();
-                        setResult(Activity.RESULT_OK);
+                        setResult();
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null)
@@ -76,7 +77,7 @@ public class TaskHandleDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int j) {
                         deleteTask();
-                        setResult(Activity.RESULT_OK);
+                        setResult();
                     }
                 })
                 .create();
@@ -165,10 +166,11 @@ public class TaskHandleDialog extends DialogFragment {
         }
     }
 
-    private void setResult(int result) {
+    private void setResult() {
         Fragment fragment = getTargetFragment();
         Intent data = new Intent();
+        data.putExtra(KEY_STATE,mTask.getState());
         data.putExtra(KEY_UUID,mTaskUUID);
-        fragment.onActivityResult(getTargetRequestCode(), result, data);
+        fragment.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);
     }
 }
