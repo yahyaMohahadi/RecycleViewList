@@ -6,6 +6,8 @@ import androidx.room.Room;
 
 import com.example.recycleviewlist.model.User;
 
+import java.util.Date;
+
 interface UserReposible {
     void deleteUser(String userNmae);
 
@@ -40,10 +42,11 @@ public class UserRepository implements UserReposible {
             )
                     .allowMainThreadQueries()
                     .build();
-            if (mDatabase.getUserDio().getUserCount("root", "root")==0) {
+            if (mDatabase.getUserDio().getUserCount("root", "root") == 0) {
                 User.Builder builder = new User.Builder();
                 mDatabase.getUserDio().addUser(builder
                         .setName("root")
+                        .setDate(new Date())
                         .setPassword("root")
                         .creat());
             }
@@ -53,9 +56,13 @@ public class UserRepository implements UserReposible {
 
     @Override
     public Boolean addUser(User user) {
-        if (mDatabase.getUserDio().getUserCount(user.getStringName(), user.getStringPassword())==0)
+        if (mDatabase.getUserDio().getUserCount(user.getStringName(), user.getStringPassword()) == 0) {
+            if (user.getDate() == null) {
+                user.setDate(new Date());
+            }
             mDatabase.getUserDio().addUser(user);
-        return mDatabase.getUserDio().getUserCount("root", "root")!=0;
+        }
+        return mDatabase.getUserDio().getUserCount("root", "root") != 0;
     }
 
     @Override

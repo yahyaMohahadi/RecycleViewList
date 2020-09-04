@@ -35,6 +35,9 @@ public class Task implements Serializable {
     @ColumnInfo(name = COLS.CUL_DATE)
     private Date mDate;
 
+    @ColumnInfo(name = COLS.CUL_IMAGE)
+    private boolean hasImage =false;
+
     public Long getId() {
         return id;
     }
@@ -57,6 +60,14 @@ public class Task implements Serializable {
 
     public State getState() {
         return mState;
+    }
+
+    public boolean getHasImage() {
+        return hasImage;
+    }
+
+    public void setHasImage(boolean hasImage) {
+        this.hasImage = hasImage;
     }
 
     public void setState(State state) {
@@ -159,5 +170,6 @@ public class Task implements Serializable {
         public static final String CUL_DATE = "date";
         public static final String CUL_UUID = "uuid";
         public static final String CUL_UUID_USER = "uuidUser";
+        public static final String CUL_IMAGE = "iamge";
     }
 }

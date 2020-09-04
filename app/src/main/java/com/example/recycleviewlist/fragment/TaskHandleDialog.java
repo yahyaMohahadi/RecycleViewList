@@ -6,7 +6,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,9 +28,13 @@ import com.example.recycleviewlist.database.task.TaskRepository;
 import com.example.recycleviewlist.model.State;
 import com.example.recycleviewlist.model.StateHandler;
 import com.example.recycleviewlist.model.Task;
+import com.example.recycleviewlist.utils.Image;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.UUID;
 
 public class TaskHandleDialog extends DialogFragment {
@@ -55,8 +59,8 @@ public class TaskHandleDialog extends DialogFragment {
     private ImageButton mImageButtonFlder;
     private ImageButton mImageButtonCamera;
 
-    private ImageView mImageViewDitail;
-    Uri imageUri;
+    private ImageView mImageViewTaskImage;
+    private File mImagePath ;
 
     public static TaskHandleDialog newInstance(StateHandler state, UUID taskUUID) {
         Bundle args = new Bundle();
@@ -133,6 +137,7 @@ public class TaskHandleDialog extends DialogFragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        mTask.setHasImage(true);
                         Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                         if (takePicture.resolveActivity(getActivity().getPackageManager()) != null)
                             startActivityForResult(takePicture, REQUEST_CODE_IMAGE_CAMERA);
@@ -146,6 +151,7 @@ public class TaskHandleDialog extends DialogFragment {
         mTask = TaskRepository.getInstance(getActivity()).getTask(mTaskUUID);
         mState = mTask.getState();
         mStateHandler = (StateHandler) getArguments().getSerializable(KEY_STATE_HANDLER);
+        mImagePath = Image.getTaskImagePath(mTask, getContext());
     }
 
     private void deleteTask() {
@@ -157,6 +163,11 @@ public class TaskHandleDialog extends DialogFragment {
         mTextViewTimeShow.setText(mTask.getDate().toString());
         mEditTextDiscreption.setText(mTask.getStringDescription());
         mEditTextName.setText(mTask.getStringTitle());
+        loadImage();
+        if (mTask.getHasImage()) {
+            mImageButtonCamera.setVisibility(View.INVISIBLE);
+            mImageButtonFlder.setVisibility(View.INVISIBLE);
+        }
     }
 
 
@@ -189,7 +200,7 @@ public class TaskHandleDialog extends DialogFragment {
         mImageButtonShare = view.findViewById(R.id.button_share);
         mImageButtonFlder = view.findViewById(R.id.button_folder);
         mImageButtonCamera = view.findViewById(R.id.button_camera);
-        mImageViewDitail = view.findViewById(R.id.imageView_detail);
+        mImageViewTaskImage = view.findViewById(R.id.imageView_detail);
 
     }
 
@@ -243,31 +254,36 @@ public class TaskHandleDialog extends DialogFragment {
             return;
         } else if (requestCode == REQUEST_CODE_IMAGE_CAMERA) {
             Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
-            //todo save it in sandbox it dont work
-            //saveImage(selectedImage);
-
-            mImageViewDitail.setImageBitmap(selectedImage);
-
+            saveImage(selectedImage);
+            mImageViewTaskImage.setImageBitmap(selectedImage);
         }
     }
 
     private void saveImage(Bitmap selectedImage) {
-        File sandbox = getActivity().getExternalFilesDir(null);
-        if (!sandbox.exists()){
-            sandbox.mkdir();
-        }
-        File photos = new File(sandbox + "/Photos");
-        if (!photos.exists()) {
-            photos.mkdir();
-        }
-        File file = new File(photos, mTask.getUUID().toString() + ".png");
+        FileOutputStream fos = null;
         try {
-            FileOutputStream fOut = new FileOutputStream(file);
-
-            selectedImage.compress(Bitmap.CompressFormat.PNG, 85, fOut);
-            fOut.flush();
-            fOut.close();
+            fos = new FileOutputStream(mImagePath);
+            selectedImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
         } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void loadImage() {
+        if (mTask.getHasImage()) {
+            try {
+                Bitmap img = BitmapFactory.decodeStream(new FileInputStream(mImagePath));
+                mImageViewTaskImage.setImageBitmap(img);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

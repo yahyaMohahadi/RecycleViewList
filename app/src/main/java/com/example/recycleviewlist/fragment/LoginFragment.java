@@ -18,6 +18,8 @@ import com.example.recycleviewlist.activity.MainActivity;
 import com.example.recycleviewlist.database.user.UserRepository;
 import com.example.recycleviewlist.model.User;
 
+import java.util.Date;
+
 enum StateStart {
     LOGIN, SIGNUP
 }
@@ -105,6 +107,7 @@ public class LoginFragment extends Fragment {
                     new User.Builder()
                             .setName(mEditTextUserNameSignUp.getText().toString())
                             .setPassword(mEditTextUserPasswordSignUp.getText().toString())
+                            .setDate(new Date())
                             .creat();
 
             UserRepository.getInstance(getActivity()).addUser(user);

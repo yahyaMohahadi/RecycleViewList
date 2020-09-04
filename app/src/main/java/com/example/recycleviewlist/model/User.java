@@ -5,6 +5,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.UUID;
 
 
@@ -23,6 +24,9 @@ public class User implements Serializable {
     @ColumnInfo(name = COLS.CUL_UUID)
     private UUID mUUID;
 
+    @ColumnInfo(name = COLS.CUL_DATE_LOGIN)
+    private Date mDate;
+
     public User() {
     }
 
@@ -30,6 +34,7 @@ public class User implements Serializable {
         public Builder() {
         }
 
+        private Date mDate;
         private String mStringName;
         private String mStringPassword;
         private UUID mUUID = UUID.randomUUID();
@@ -49,11 +54,17 @@ public class User implements Serializable {
             return this;
         }
 
+        public Builder setDate(Date date) {
+            mDate = date;
+            return this;
+        }
+
         public User creat() {
             User user = new User();
             user.mUUID = this.mUUID;
             user.mStringPassword = this.mStringPassword;
             user.mStringName = this.mStringName;
+            user.mDate = this.mDate;
             return user;
         }
 
@@ -91,6 +102,14 @@ public class User implements Serializable {
         mUUID = UUID;
     }
 
+    public Date getDate() {
+        return mDate;
+    }
+
+    public void setDate(Date date) {
+        mDate = date;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -106,6 +125,7 @@ public class User implements Serializable {
         public static final String CUL_NAME = "UserName";
         public static final String CUL_PASSWORD = "Password";
         public static final String CUL_UUID = "uuid";
+        public static final String CUL_DATE_LOGIN = "loginTime";
     }
 
 }
