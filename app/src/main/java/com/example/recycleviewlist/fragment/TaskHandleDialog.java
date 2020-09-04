@@ -32,10 +32,7 @@ import com.example.recycleviewlist.model.Task;
 import com.example.recycleviewlist.utils.Image;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
@@ -62,7 +59,7 @@ public class TaskHandleDialog extends DialogFragment {
     private ImageButton mImageButtonFlder;
     private ImageButton mImageButtonCamera;
 
-    private ImageView mImageViewTaskImage;
+    private ImageView mImageViewTaskDetail;
     private File mImagePath;
 
     public static TaskHandleDialog newInstance(StateHandler state, UUID taskUUID) {
@@ -142,7 +139,6 @@ public class TaskHandleDialog extends DialogFragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mTask.setHasImage(true);
                         Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                         if (takePicture.resolveActivity(getActivity().getPackageManager()) != null)
                             startActivityForResult(takePicture, REQUEST_CODE_IMAGE_CAMERA);
@@ -168,7 +164,9 @@ public class TaskHandleDialog extends DialogFragment {
         mTextViewTimeShow.setText(mTask.getDate().toString());
         mEditTextDiscreption.setText(mTask.getStringDescription());
         mEditTextName.setText(mTask.getStringTitle());
-        loadImage();
+        mImageViewTaskDetail.setImageBitmap(
+        Image.loadBitMap(mTask, getContext()
+        ));
         checkInvisibleButtonImage();
     }
 
@@ -210,7 +208,7 @@ public class TaskHandleDialog extends DialogFragment {
         mImageButtonShare = view.findViewById(R.id.button_share);
         mImageButtonFlder = view.findViewById(R.id.button_folder);
         mImageButtonCamera = view.findViewById(R.id.button_camera);
-        mImageViewTaskImage = view.findViewById(R.id.imageView_detail);
+        mImageViewTaskDetail = view.findViewById(R.id.imageView_detail_handeler);
 
     }
 
@@ -264,48 +262,20 @@ public class TaskHandleDialog extends DialogFragment {
             return;
         } else if (requestCode == REQUEST_CODE_IMAGE_CAMERA) {
             Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
-            saveImage(selectedImage);
-            mImageViewTaskImage.setImageBitmap(selectedImage);
+            Image.saveImageTask(mTask, selectedImage, getContext());
+            mImageViewTaskDetail.setImageBitmap(selectedImage);
+
         } else if (requestCode == RESULT_LOAD_IMG) {
             try {
                 Uri imageUri = data.getData();
                 InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
                 Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                saveImage(selectedImage);
-                mTask.setHasImage(true);
-                mImageViewTaskImage.setImageBitmap(selectedImage);
+                Image.saveImageTask(mTask, selectedImage, getContext());
+                mImageViewTaskDetail.setImageBitmap(selectedImage);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
         checkInvisibleButtonImage();
-    }
-
-    private void saveImage(Bitmap selectedImage) {
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(mImagePath);
-            selectedImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            fos.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void loadImage() {
-        if (mTask.getHasImage()) {
-            try {
-                Bitmap img = BitmapFactory.decodeStream(new FileInputStream(mImagePath));
-                mImageViewTaskImage.setImageBitmap(img);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

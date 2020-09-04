@@ -9,7 +9,7 @@
 
 
     <ImageView
-        android:id="@+id/imageView_detail"
+        android:id="@+id/imageView_detail_handeler"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_marginStart="16dp"
@@ -27,8 +27,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:text="Titile"
-        app:layout_constraintStart_toEndOf="@+id/imageView_detail"
-        app:layout_constraintTop_toTopOf="@+id/imageView_detail" />
+        app:layout_constraintStart_toEndOf="@+id/imageView_detail_handeler"
+        app:layout_constraintTop_toTopOf="@+id/imageView_detail_handeler" />
 
     <TextView
         android:id="@+id/textView3"
@@ -151,8 +151,8 @@
         android:background="#00FFFFFF"
         android:src="@android:drawable/ic_menu_camera"
         android:text="Button"
-        app:layout_constraintStart_toStartOf="@+id/imageView_detail"
-        app:layout_constraintTop_toBottomOf="@+id/imageView_detail" />
+        app:layout_constraintStart_toStartOf="@+id/imageView_detail_handeler"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_detail_handeler" />
 
     <ImageButton
         android:id="@+id/button_folder"

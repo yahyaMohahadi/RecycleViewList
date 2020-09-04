@@ -13,14 +13,13 @@
         android:layout_height="30dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:text="TextView"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="#0AF114"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageView_calandar"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView_detail_list"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
@@ -29,6 +28,7 @@
         android:id="@+id/imageView_time"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/imageView_calandar"
         app:layout_constraintTop_toBottomOf="@+id/imageView_calandar"
         app:srcCompat="@mipmap/ic_clock"
@@ -38,7 +38,6 @@
         android:id="@+id/imageView_calandar"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,6 +45,29 @@
         app:srcCompat="@mipmap/ic_calander"
         tools:ignore="MissingConstraints" />
 
+    <ImageView
+        android:id="@+id/imageView_detail_list"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/image_corner"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_first_task_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/baumans"
+        android:textColor="#80000000"
+        android:textColorHint="#FFFFFF"
+        android:textColorLink="#FFFFFF"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView_detail_list"
+        app:layout_constraintEnd_toEndOf="@+id/imageView_detail_list"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageView_detail_list"
+        tools:text="T" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

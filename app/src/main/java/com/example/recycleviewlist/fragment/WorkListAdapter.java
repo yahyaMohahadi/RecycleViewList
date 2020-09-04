@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.model.Task;
+import com.example.recycleviewlist.utils.Image;
 
 import java.util.List;
 import java.util.UUID;
@@ -72,18 +73,39 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.Holder
         private TextView mTextViewName;
         private ImageView mImageViewTime;
         private ImageView mImageViewCalender;
+        private ImageView mImageViewTaskDetail;
+        private TextView mTextViewFirstStringName;
         private Task mTask;
 
         public Holder(@NonNull View itemView) {
             super(itemView);
             findView(itemView);
 
+
+        }
+
+        private void initView() {
+            if (mTask.getHasImage()) {
+                mTextViewFirstStringName.setVisibility(View.INVISIBLE);
+                mImageViewTaskDetail.setBackground(null);
+                mImageViewTaskDetail.setImageBitmap(
+                        Image.loadBitMap(mTask, mContext)
+                );
+            } else {
+                mTextViewFirstStringName.setVisibility(View.VISIBLE);
+                String first = mTask.getStringTitle().equals("") || mTask.getStringTitle() == null ?
+                        "T" :
+                        String.valueOf(mTask.getStringTitle().charAt(0)).toUpperCase();
+                mTextViewFirstStringName.setText(first);
+            }
         }
 
         private void findView(@NonNull View itemView) {
             mTextViewName = itemView.findViewById(R.id.textView_name);
             mImageViewTime = itemView.findViewById(R.id.imageView_time);
             mImageViewCalender = itemView.findViewById(R.id.imageView_calandar);
+            mImageViewTaskDetail = itemView.findViewById(R.id.imageView_detail_list);
+            mTextViewFirstStringName = itemView.findViewById(R.id.textView_first_task_detail);
 
         }
 
@@ -118,6 +140,7 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.Holder
 
         public void bind(int position) {
             mTask = mList.get(position);
+            initView();
             setOnCklick(itemView);
             if (mTask != null) {
                 mTextViewName.setText(mTask.getStringTitle());
