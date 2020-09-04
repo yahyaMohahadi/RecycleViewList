@@ -41,6 +41,7 @@ public class MainFragment extends Fragment {
     public static final int REQUEST_COD_ALERT_DELETE = 3;
     public static final int REQUEST_COD_ALERT_DELETE_ACUNT = 4;
 
+
     ViewPager2 mViewPagerTask;
     List<State> mStates = new ArrayList<>(Arrays.asList(State.TODO, State.DOING, State.DONE));
     TextView mTextViewDone;
@@ -50,6 +51,17 @@ public class MainFragment extends Fragment {
     private FloatingActionButton mActionButton;
     private Fragment[] mFragments = new Fragment[3];
     private User mUserOnline = OnlineUser.newInstance().getOnlineUser();
+    private Callbacks mCallbacks;
+
+    public static MainFragment newInstance(Callbacks callbacks) {
+        MainFragment mainFragment = new MainFragment();
+        mainFragment.setCallbacks(callbacks);
+        return mainFragment;
+    }
+
+    public void setCallbacks(Callbacks callbacks) {
+        mCallbacks = callbacks;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,9 +90,14 @@ public class MainFragment extends Fragment {
         }
     }
 
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.main_menu, menu);
+        if (OnlineUser.newInstance().getOnlineUser().equals(OnlineUser.mUserRoot)) {
+            menu.findItem(R.id.actionbar_main_seting).setVisible(true);
+        }
         setMenuView();
     }
 
@@ -113,6 +130,10 @@ public class MainFragment extends Fragment {
                 getActivity().finish();
                 return true;
             }
+            case R.id.actionbar_main_seting: {
+                mCallbacks.startSeting();
+                return true;
+            }
         }
 
     }
@@ -135,7 +156,6 @@ public class MainFragment extends Fragment {
         mTextViewToDo = view.findViewById(R.id.textView_todo);
         mViewPagerTask = view.findViewById(R.id.ViewPager_task);
         mActionButton = view.findViewById(R.id.floatingActionButton_add);
-
     }
 
     private void setOnClick() {
@@ -281,5 +301,8 @@ public class MainFragment extends Fragment {
         public int getItemCount() {
             return 3;
         }
+    }
+    public  interface Callbacks{
+        void startSeting();
     }
 }

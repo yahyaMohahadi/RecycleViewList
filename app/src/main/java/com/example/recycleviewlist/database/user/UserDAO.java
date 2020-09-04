@@ -7,6 +7,8 @@ import androidx.room.Query;
 
 import com.example.recycleviewlist.model.User;
 
+import java.util.List;
+
 @Dao
 public interface UserDAO {
 
@@ -24,4 +26,7 @@ public interface UserDAO {
 
     @Query("SELECT * FROM USERS WHERE Password = :password AND UserName = :name limit 1")
     User getUser(String name, String password);
+
+    @Query("SELECT * FROM USERS")
+    List<User> getUsers();
 }

@@ -103,10 +103,16 @@ public class WorkListFragment extends Fragment {
     }
 
     public void addAdapter() {
+  /*      if (OnlineUser.newInstance().getOnlineUser().equals(OnlineUser.mUserRoot)) {
+            mAdapterTask = WorkListAdapter.newInstance(
+                    getActivity(),
+                    TaskRepository.getInstance(getActivity()).getT(mState)
+        } else {*/
         mAdapterTask = WorkListAdapter.newInstance(
                 getActivity(),
                 TaskRepository.getInstance(getActivity()).getListTasks(mState)
         );
+        //}
         mAdapterTask.setCallbacks(new WorkListAdapter.Callbacks() {
             @Override
             public void itemCall(UUID uuid) {

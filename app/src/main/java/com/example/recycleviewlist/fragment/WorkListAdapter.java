@@ -80,8 +80,6 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.Holder
         public Holder(@NonNull View itemView) {
             super(itemView);
             findView(itemView);
-
-
         }
 
         private void initView() {

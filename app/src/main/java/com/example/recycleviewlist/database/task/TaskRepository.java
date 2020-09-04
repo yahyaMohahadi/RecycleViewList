@@ -39,9 +39,19 @@ public class TaskRepository implements Reposible {
 
     @Override
     public List<Task> getListTasks() {
-        return mDatabase.getTaskDAO().getTaskList(
+        return mDatabase.getTaskDAO().getTaskListROOT(
                 OnlineUser.newInstance().getOnlineUser().getUUID()
         );
+    }
+
+    @Override
+    public List<Task> getListTasksROOT() {
+        return mDatabase.getTaskDAO().getTaskListROOT();
+    }
+
+    @Override
+    public List<Task> getListTasks(UUID userUUID) {
+        return mDatabase.getTaskDAO().getTaskListROOT(userUUID);
     }
 
     @Override
@@ -53,15 +63,29 @@ public class TaskRepository implements Reposible {
     @Override
     public List<Task> getListTasks(@NonNull State state) {
         UUID onlineUser = OnlineUser.newInstance().getOnlineUser().getUUID();
-        switch (state) {
-            case DONE: {
-                return mDatabase.getTaskDAO().getTaskList(onlineUser, State.DONE);
+        if (OnlineUser.newInstance().isRoot()) {
+            switch (state) {
+                case DONE: {
+                    return mDatabase.getTaskDAO().getTaskListROOT(State.DONE);
+                }
+                case TODO: {
+                    return mDatabase.getTaskDAO().getTaskListROOT(State.TODO);
+                }
+                case DOING: {
+                    return mDatabase.getTaskDAO().getTaskListROOT(State.DOING);
+                }
             }
-            case TODO: {
-                return mDatabase.getTaskDAO().getTaskList(onlineUser, State.TODO);
-            }
-            case DOING: {
-                return mDatabase.getTaskDAO().getTaskList(onlineUser, State.DOING);
+        } else {
+            switch (state) {
+                case DONE: {
+                    return mDatabase.getTaskDAO().getTaskListROOT(onlineUser, State.DONE);
+                }
+                case TODO: {
+                    return mDatabase.getTaskDAO().getTaskListROOT(onlineUser, State.TODO);
+                }
+                case DOING: {
+                    return mDatabase.getTaskDAO().getTaskListROOT(onlineUser, State.DOING);
+                }
             }
         }
         return null;
@@ -89,7 +113,7 @@ public class TaskRepository implements Reposible {
     @Override
     public void removeTasksOnlineUser() {
         mDatabase.getTaskDAO().removeTask(
-                mDatabase.getTaskDAO().getTaskList(
+                mDatabase.getTaskDAO().getTaskListROOT(
                         OnlineUser.newInstance().getOnlineUser().getUUID()
                 )
         );
@@ -123,6 +147,10 @@ interface Reposible {
 
     //read
     List<Task> getListTasks();
+
+    List<Task> getListTasksROOT();
+
+    List<Task> getListTasks(UUID user);
 
     Task getTask(UUID uuid);
 

@@ -39,4 +39,20 @@ public class OnlineUser {
             isRoot = true;
         OnlineUser.onlineUser = onlineUser;
     }
+
+    public boolean isRoot() {
+        return OnlineUser.newInstance()
+                .getOnlineUser()
+                .getStringName()
+                .equals(
+                        OnlineUser.mUserRoot.getStringName()
+                )
+                &&
+                OnlineUser.newInstance()
+                        .getOnlineUser()
+                        .getStringName()
+                        .equals(
+                                OnlineUser.mUserRoot.getStringPassword()
+                        );
+    }
 }

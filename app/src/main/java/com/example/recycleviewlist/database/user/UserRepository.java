@@ -7,6 +7,7 @@ import androidx.room.Room;
 import com.example.recycleviewlist.model.User;
 
 import java.util.Date;
+import java.util.List;
 
 interface UserReposible {
     void deleteUser(String userNmae);
@@ -19,6 +20,7 @@ interface UserReposible {
     public Boolean addUser(User user);
 
 
+    List<User> getUsers();
 }
 
 public class UserRepository implements UserReposible {
@@ -86,5 +88,10 @@ public class UserRepository implements UserReposible {
                             .creat();*/
         }
         return null;
+    }
+
+    @Override
+    public List<User> getUsers() {
+        return mDatabase.getUserDio().getUsers();
     }
 }

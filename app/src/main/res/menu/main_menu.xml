@@ -6,7 +6,7 @@
         android:id="@+id/actionbar_main_logout"
         android:icon="@drawable/ic_action_bar_logout"
         android:title="Logout"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/actionbar_main_delete_tasks"
         android:icon="@drawable/ic_action_bar_delete"
@@ -16,5 +16,11 @@
         android:id="@+id/actionbar_main_delete_acount"
         android:icon="@drawable/ic_action_bar_delete_acount"
         android:title="delete acount"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/actionbar_main_seting"
+        android:icon="@drawable/ic_seting"
+        android:title="setting"
+        android:visible="false"
         app:showAsAction="ifRoom" />
 </menu>

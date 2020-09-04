@@ -37,13 +37,15 @@ public interface TaskDAO {
     void removeTasks();
 
     @Query("SELECT * FROM TASKS ")
-    List<Task> getTaskList();
+    List<Task> getTaskListROOT();
 
     @Query("SELECT * FROM TASKS WHERE uuidUser = :uuidUser")
-    List<Task> getTaskList(UUID uuidUser);
+    List<Task> getTaskListROOT(UUID uuidUser);
 
     @Query("SELECT * FROM TASKS WHERE uuidUser = :uuidUser AND state = :state ")
-    List<Task> getTaskList(UUID uuidUser, State state);
+    List<Task> getTaskListROOT(UUID uuidUser, State state);
 
+    @Query("SELECT * FROM TASKS WHERE  state = :state ")
+    List<Task> getTaskListROOT(State state);
 
 }
