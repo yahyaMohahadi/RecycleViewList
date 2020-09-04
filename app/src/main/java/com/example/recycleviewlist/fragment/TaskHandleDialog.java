@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 public class TaskHandleDialog extends DialogFragment {
@@ -43,6 +45,7 @@ public class TaskHandleDialog extends DialogFragment {
     public static final String KEY_UUID = "com.example.recycleviewlist.fragmentRESULTUUUID";
     public static final String KEY_STATE = "com.example.recycleviewlist.fragmentSTATE";
     public static final int REQUEST_CODE_IMAGE_CAMERA = 0;
+    public static final int RESULT_LOAD_IMG = 1;
     private EditText mEditTextName;
     private EditText mEditTextDiscreption;
     private UUID mTaskUUID;
@@ -60,7 +63,7 @@ public class TaskHandleDialog extends DialogFragment {
     private ImageButton mImageButtonCamera;
 
     private ImageView mImageViewTaskImage;
-    private File mImagePath ;
+    private File mImagePath;
 
     public static TaskHandleDialog newInstance(StateHandler state, UUID taskUUID) {
         Bundle args = new Bundle();
@@ -129,7 +132,9 @@ public class TaskHandleDialog extends DialogFragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //todo make manage
+                        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                        photoPickerIntent.setType("image/*");
+                        startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
                     }
                 }
         );
@@ -164,7 +169,12 @@ public class TaskHandleDialog extends DialogFragment {
         mEditTextDiscreption.setText(mTask.getStringDescription());
         mEditTextName.setText(mTask.getStringTitle());
         loadImage();
+        checkInvisibleButtonImage();
+    }
+
+    private void checkInvisibleButtonImage() {
         if (mTask.getHasImage()) {
+
             mImageButtonCamera.setVisibility(View.INVISIBLE);
             mImageButtonFlder.setVisibility(View.INVISIBLE);
         }
@@ -256,7 +266,19 @@ public class TaskHandleDialog extends DialogFragment {
             Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
             saveImage(selectedImage);
             mImageViewTaskImage.setImageBitmap(selectedImage);
+        } else if (requestCode == RESULT_LOAD_IMG) {
+            try {
+                Uri imageUri = data.getData();
+                InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
+                Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                saveImage(selectedImage);
+                mTask.setHasImage(true);
+                mImageViewTaskImage.setImageBitmap(selectedImage);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
+        checkInvisibleButtonImage();
     }
 
     private void saveImage(Bitmap selectedImage) {
