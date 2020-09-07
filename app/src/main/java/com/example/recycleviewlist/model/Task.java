@@ -1,5 +1,6 @@
 package com.example.recycleviewlist.model;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -36,7 +37,25 @@ public class Task implements Serializable {
     private Date mDate;
 
     @ColumnInfo(name = COLS.CUL_IMAGE)
-    private boolean hasImage =false;
+    private boolean hasImage = false;
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "This is task manager app" +
+                "\nUSER : " + OnlineUser.newInstance().getOnlineUser().getStringName() +
+                "\nTASK : " + this.getStringTitle() +
+                "\nDESCRIPTION : " + this.getStringDescription() +
+                "\nTIME : " + this.getDate().toString() +
+                "\nSTATE : " + (this.getState().toString()).toLowerCase();
+    }
+    public String getStringSearch() {
+        return OnlineUser.newInstance().getOnlineUser().getStringName() +
+                " " + this.getStringTitle() +
+                " " + this.getStringDescription() +
+                " " + this.getDate().toString() +
+                " " + (this.getState().toString()).toLowerCase();
+    }
 
     public Long getId() {
         return id;
@@ -103,7 +122,7 @@ public class Task implements Serializable {
         private State mState = State.DONE;
         private String mStringTitle;
         private String mStringDescription;
-        private Date mDate ;
+        private Date mDate;
 
         public Bulder() {
         }

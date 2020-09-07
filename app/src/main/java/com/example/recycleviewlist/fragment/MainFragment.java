@@ -9,6 +9,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -52,6 +54,7 @@ public class MainFragment extends Fragment {
     private Fragment[] mFragments = new Fragment[3];
     private User mUserOnline = OnlineUser.newInstance().getOnlineUser();
     private Callbacks mCallbacks;
+    SearchView mSearchView;
 
     public static MainFragment newInstance(Callbacks callbacks) {
         MainFragment mainFragment = new MainFragment();
@@ -71,7 +74,7 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_work_view_pager, container, false);
+        View view = inflater.inflate(R.layout.main_fragment, container, false);
         setFragments();
         findView(view);
         setOnClick();
@@ -98,7 +101,28 @@ public class MainFragment extends Fragment {
         if (OnlineUser.newInstance().getOnlineUser().equals(OnlineUser.mUserRoot)) {
             menu.findItem(R.id.actionbar_main_seting).setVisible(true);
         }
-        setMenuView();
+        initSearchView(menu);
+    }
+
+    private void initSearchView(@NonNull Menu menu) {
+        mSearchView = (SearchView) menu.findItem(R.id.action_bar_search).getActionView();
+        mSearchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                //Toast.makeText(getContext(), query, Toast.LENGTH_SHORT).show();
+                ((WorkListFragment) mFragments[mIntCurrent]).onSearch(query);
+                return false;
+
+            }
+
+        });
     }
 
     @Override
@@ -211,6 +235,8 @@ public class MainFragment extends Fragment {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                if (mSearchView != null)
+                    mSearchView.setIconified(true);
             }
 
             @Override
@@ -302,7 +328,8 @@ public class MainFragment extends Fragment {
             return 3;
         }
     }
-    public  interface Callbacks{
+
+    public interface Callbacks {
         void startSeting();
     }
 }

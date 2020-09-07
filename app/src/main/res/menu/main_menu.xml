@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_bar_search"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="Search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/actionbar_main_logout"
         android:icon="@drawable/ic_action_bar_logout"
         android:title="Logout"
@@ -23,4 +29,6 @@
         android:title="setting"
         android:visible="false"
         app:showAsAction="ifRoom" />
+
+
 </menu>

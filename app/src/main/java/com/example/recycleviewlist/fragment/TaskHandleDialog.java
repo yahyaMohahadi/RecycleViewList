@@ -23,7 +23,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import com.example.recycleviewlist.OnlineUser;
 import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.database.task.TaskRepository;
 import com.example.recycleviewlist.model.State;
@@ -111,17 +110,9 @@ public class TaskHandleDialog extends DialogFragment {
                     public void onClick(View view) {
                         Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                         shareIntent.setType("text/plain");
-                        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, getTextShare());
-                        startActivity(shareIntent);
-                    }
 
-                    private String getTextShare() {
-                        return "This is task manager app" +
-                                "\nUSER : " + OnlineUser.newInstance().getOnlineUser().getStringName() +
-                                "\nTASK : " + mTask.getStringTitle() +
-                                "\nDESCRIPTION : " + mTask.getStringDescription() +
-                                "\nTIME : " + mTask.getDate().toString() +
-                                "\nSTATE : " + (mTask.getState().toString()).toLowerCase();
+                        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, mTask.toString());
+                        startActivity(shareIntent);
                     }
                 }
         );

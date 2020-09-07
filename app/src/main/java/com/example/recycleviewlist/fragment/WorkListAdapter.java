@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,10 +16,11 @@ import com.example.recycleviewlist.R;
 import com.example.recycleviewlist.model.Task;
 import com.example.recycleviewlist.utils.Image;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.Holder> {
+public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.Holder> implements Filterable {
 
 
     private Callbacks mCallbacks;
@@ -66,6 +69,39 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.Holder
 
     public void setContext(Context context) {
         mContext = context;
+    }
+
+    @Override
+    public Filter getFilter() {
+        mList.clear();
+        mCallbacks.getUpdateList();
+
+        return  new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                List<Task> filteredList = new ArrayList<>();
+                if (constraint == null || constraint.length() == 0) {
+                    filteredList.addAll(mList);
+                } else {
+                    String filterPattern = constraint.toString().toLowerCase().trim();
+                    for (Task item : mList) {
+                        if (item.getStringSearch().toLowerCase().contains(filterPattern)) {
+                            filteredList.add(item);
+
+                        }
+                    }
+                }
+                FilterResults results = new FilterResults();
+                results.values = filteredList;
+                return results;
+            }
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                mList.clear();
+                mList.addAll((List) results.values);
+                notifyDataSetChanged();
+            }
+        };
     }
 
 
@@ -154,6 +190,8 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.Holder
         void calenderCall(UUID uuid);
 
         void timeCall(UUID uuid);
+
+        void getUpdateList();
     }
 }
 

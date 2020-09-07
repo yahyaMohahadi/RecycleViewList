@@ -49,6 +49,12 @@ public class WorkListFragment extends Fragment {
         return instance;
     }
 
+    public void onSearch(String string) {
+
+        if (mAdapterTask != null)
+            mAdapterTask.getFilter().filter(string);
+    }
+
 
     public static Fragment newInstance(Intent intent) {
         Bundle args = new Bundle();
@@ -103,16 +109,11 @@ public class WorkListFragment extends Fragment {
     }
 
     public void addAdapter() {
-  /*      if (OnlineUser.newInstance().getOnlineUser().equals(OnlineUser.mUserRoot)) {
-            mAdapterTask = WorkListAdapter.newInstance(
-                    getActivity(),
-                    TaskRepository.getInstance(getActivity()).getT(mState)
-        } else {*/
         mAdapterTask = WorkListAdapter.newInstance(
                 getActivity(),
                 TaskRepository.getInstance(getActivity()).getListTasks(mState)
         );
-        //}
+
         mAdapterTask.setCallbacks(new WorkListAdapter.Callbacks() {
             @Override
             public void itemCall(UUID uuid) {
@@ -120,7 +121,6 @@ public class WorkListFragment extends Fragment {
                         StateHandler.EDIT,
                         uuid
                 );
-                //todo get result
                 fragmentAdd.setTargetFragment(WorkListFragment.this, REQUEST_COD_EDIT);
                 fragmentAdd.show(getFragmentManager(), "TAG");
             }
@@ -149,6 +149,11 @@ public class WorkListFragment extends Fragment {
 
                 time.setTargetFragment(WorkListFragment.this, REQUEST_CODE_TIME_PICKER);
                 time.show(getFragmentManager(), "taG");
+            }
+
+            @Override
+            public void getUpdateList() {
+                mAdapterTask.setList(TaskRepository.getInstance(getActivity()).getListTasks(mState));
             }
         });
         mRecyclerView.setAdapter(mAdapterTask);
